@@ -1,6 +1,7 @@
 package com.example.myapplication.di
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import com.example.myapplication.api.AgifyService
 import com.example.myapplication.repository.DataRepo
 import com.example.myapplication.repository.roomdb.AppLocalDatabase
@@ -15,7 +16,7 @@ val appModule = module {
 
     // single instance of HelloRepository
     single { DataRepo(NetworkModule(androidContext())) }
-    viewModel { MainFragmentViewModel(get()) }
+    viewModel { (safestateHandle:SavedStateHandle)->MainFragmentViewModel(get(),safestateHandle) }
     viewModel { HistoryFragmentViewModel(get()) }
     viewModel { EditFragmentViewModel(get()) }
 //    // Simple Presenter Factory

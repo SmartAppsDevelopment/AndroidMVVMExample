@@ -11,10 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentMainBinding
@@ -27,12 +24,13 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
 class MainFragment : Fragment() {
     private val TAG = "MainFragment"
     lateinit var binding: FragmentMainBinding
-    val viewmodel by inject<MainFragmentViewModel>()
+    val viewmodel by sharedViewModel<MainFragmentViewModel> ()
     val isBindingInit = this::binding.isInitialized
     var progress: ProgressDialog? = null
     var currentIndex = -1
@@ -55,12 +53,14 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+       //// binding.tveText.setText(viewmodel.currUserName)
         val items = resources.getStringArray(R.array.countrynames)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, items)
         if (true) {
             binding.autoCompletetxt.setAdapter(adapter)
             binding.autoCompletetxt.setOnItemClickListener { adapterView, view, i, l ->
                 Log.e(TAG, "onViewCreated: ")
+
                 currentIndex = i
             }
             binding.btnsearch.setOnClickListener {
@@ -69,7 +69,9 @@ class MainFragment : Fragment() {
                         if (validateCountry() != null) {
                             val dfdf = viewmodel.searchAge(SendResponseModel().apply {
                                 userName = binding.tveText.text.toString()
+                                viewmodel.currUserName=userName
                                 country = currentCountry
+                               /// viewmodel.currentIndex
                             })
                         } else {
                             requireContext().showToast("Select Country")
@@ -97,7 +99,7 @@ class MainFragment : Fragment() {
 
     fun observeData() {
         lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewmodel.uiUpdates.collectLatest {
                     when (it) {
                         is ResponseModel.Error -> {
