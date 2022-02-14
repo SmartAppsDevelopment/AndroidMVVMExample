@@ -53,7 +53,8 @@ var delUserCallback:((userData:UserData)->Unit)?=null
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
         holder.binding.btndel.setOnClickListener {
-            delUserCallback?.invoke(getItem(position))
+            Log.e("TAG", "onBindViewHolder: "+currentList.size+"    $position == ${holder.adapterPosition}" )
+            delUserCallback?.invoke(getItem(holder.adapterPosition))
         }
     }
 

@@ -12,16 +12,18 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-        <androidx.appcompat.widget.Toolbar
-            android:layout_width="0dp"
-            style="@style/Widget.MaterialComponents.Toolbar.Primary"
-            app:titleTextColor="@color/white"
-            android:background="@color/purple_700"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:id="@+id/toolbar" />
+            <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                style="@style/Widget.MaterialComponents.Toolbar.Primary"
+                app:titleTextColor="@color/white"
+                android:background="@color/purple_700"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/toolbar" />
+
+
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/nav_host_fragment"

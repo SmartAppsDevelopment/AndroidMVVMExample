@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_margin="20dp"
             android:layout_height="wrap_content"
-            android:hint="enter person name "
+            android:hint="Enter Name"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@+id/spinnertv"
             app:layout_constraintEnd_toEndOf="parent"
@@ -26,6 +26,9 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tve_text"
+                android:inputType="text"
+                android:maxLines="1"
+                android:imeOptions="actionSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -45,6 +48,8 @@
             <AutoCompleteTextView
                 android:id="@+id/autoCompletetxt"
                 android:layout_width="match_parent"
+                android:maxLines="1"
+                android:imeOptions="actionSearch"
                 android:hint="Select Country"
                 android:layout_height="wrap_content"
                 android:inputType="none" />
