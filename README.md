@@ -5,24 +5,7 @@ It is MVVM Architecture without [LiveData](https://developer.android.com/topic/l
 
 There is a user search feature on Github.
 
-## Screenshot
-top|detail
-:--:|:--:
-<img src="images/screenshot1.png" width="250px" />|<img src="images/screenshot2.png" width="250px" />
 
-## Architecture
-<img src="images/architecture.png" width="250px" />
-
-### ViewModel -> View
-Use kotlin coroutines flow with [StateFlow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-state-flow/).
-
-After transformed to hot stream with [ViewModelScope](https://developer.android.com/topic/libraries/architecture/coroutines#viewmodelscope), bind to view with [LifecycleScope](https://developer.android.com/topic/libraries/architecture/coroutines#lifecyclescope).
-
-### View -> ViewModel
-Call a ViewModel function, and emit to [MutableSharedFlow](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.flow/-mutable-shared-flow/).
-
-### View <-> ViewModel (2-way data binding)
-Combine the above two.
 
 
 
