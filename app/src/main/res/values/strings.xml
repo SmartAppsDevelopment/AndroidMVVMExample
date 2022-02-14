@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="histroty">History</string>
+
+    <string-array name="countrynames">
+        <item>France</item>
+        <item>Italy</item>
+        <item>Spain</item>
+        <item>Turkey</item>
+        <item>Germany</item>
+        <item>Poland</item>
+        <item>United Kingdom</item>
+    </string-array>
+    <string-array name="countrycodes">
+        <item>FR</item>
+        <item>IT</item>
+        <item>ES</item>
+        <item>TR</item>
+        <item>DE</item>
+        <item>PL</item>
+        <item>GB</item>
+    </string-array>
+</resources>

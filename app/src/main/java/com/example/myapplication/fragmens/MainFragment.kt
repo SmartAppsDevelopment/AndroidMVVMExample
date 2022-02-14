@@ -1,0 +1,152 @@
+package com.example.myapplication.fragmens
+
+import android.app.ProgressDialog
+import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.findNavController
+import com.example.myapplication.R
+import com.example.myapplication.databinding.FragmentMainBinding
+import com.example.myapplication.helper.ResponseModel
+import com.example.myapplication.helper.showToast
+import com.example.myapplication.pojos.SendResponseModel
+import com.example.myapplication.viewmodel.MainFragmentViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.koin.android.ext.android.inject
+
+
+class MainFragment : Fragment() {
+    private val TAG = "MainFragment"
+    lateinit var binding: FragmentMainBinding
+    val viewmodel by inject<MainFragmentViewModel>()
+    val isBindingInit = this::binding.isInitialized
+    var progress: ProgressDialog? = null
+    var currentIndex = -1
+    var currentCountry = "US"
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        // Inflate the layout for this fragment
+        // return inflater.inflate(R.layout.fragment_main, container, false)
+        progress = ProgressDialog(context)
+        binding = DataBindingUtil.inflate<FragmentMainBinding>(
+            inflater,
+            R.layout.fragment_main,
+            null,
+            false
+        )
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val items = resources.getStringArray(R.array.countrynames)
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, items)
+        if (true) {
+            binding.autoCompletetxt.setAdapter(adapter)
+            binding.autoCompletetxt.setOnItemClickListener { adapterView, view, i, l ->
+                Log.e(TAG, "onViewCreated: ")
+                currentIndex = i
+            }
+            binding.btnsearch.setOnClickListener {
+                viewmodel.viewModelScope.launch {
+                    if (!TextUtils.isEmpty(binding.tveText.text.toString())) {
+                        if (validateCountry() != null) {
+                            val dfdf = viewmodel.searchAge(SendResponseModel().apply {
+                                userName = binding.tveText.text.toString()
+                                country = currentCountry
+                            })
+                        } else {
+                            requireContext().showToast("Select Country")
+
+                        }
+                    } else {
+                        requireContext().showToast("Enter Name")
+                    }
+
+                    Log.e("TAG", "onViewCreated: ")
+                }
+            }
+        }
+        observeData()
+    }
+
+    private fun validateCountry(): String? {
+        try {
+            currentCountry = resources.getStringArray(R.array.countrycodes)[currentIndex]
+            return currentCountry
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
+    fun observeData() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewmodel.uiUpdates.collectLatest {
+                    when (it) {
+                        is ResponseModel.Error -> {
+                            Log.e(TAG, "observeData: Error")
+                        }
+                        is ResponseModel.Idle -> {
+                            Log.e(TAG, "observeData: Idle")
+                        }
+                        is ResponseModel.Loading -> {
+                            showDialog()
+                            Log.e(TAG, "observeData: Loading")
+                        }
+                        is ResponseModel.Success -> {
+                            dismissDialog()
+                            val dir = MainFragmentDirections.actionMainFragmentToResultFragment()
+                            if (it.data!!.size > 0) {
+                                val list = it.data!!.map {
+                                    it!!
+                                }.toTypedArray()
+                                dir.transfereddata = list
+                                findNavController().navigate(dir)
+                                viewmodel.markIdleStsate()
+                            } else {
+                                requireContext().showToast("No Data Found ")
+                            }
+                            Log.e(TAG, "observeData: Success")
+                        }
+                    }
+
+                }
+            }
+
+        }
+    }
+
+    fun showDialog() {
+        viewmodel.viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                progress?.show()
+            }
+        }
+    }
+
+    fun dismissDialog() {
+        viewmodel.viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                progress?.hide()
+            }
+        }
+    }
+
+}

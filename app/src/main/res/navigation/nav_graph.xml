@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph.xml"
+    app:startDestination="@id/mainFragment">
+
+    <fragment
+        android:id="@+id/mainFragment"
+        android:name="com.example.myapplication.fragmens.MainFragment"
+        android:label="MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_resultFragment"
+            app:destination="@id/resultFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_historyFragment"
+            app:destination="@id/historyFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resultFragment"
+        android:name="com.example.myapplication.fragmens.ResultFragment"
+        android:label="ResultFragment"
+        tools:layout="@layout/fragment_result">
+        <argument
+            android:name="transfereddata"
+            app:argType="com.example.myapplication.pojos.UserData[]"
+            android:defaultValue='@null'
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        tools:layout="@layout/fragment_history"
+        android:id="@+id/historyFragment"
+        android:name="com.example.myapplication.fragmens.HistoryFragment"
+        android:label="History" >
+        <action
+            android:id="@+id/action_historyFragment_to_editFragment"
+            app:destination="@id/editFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editFragment"
+        tools:layout="@layout/fragment_edit"
+        android:name="com.example.myapplication.fragmens.EditFragment"
+        android:label="EditFragment" >
+        <argument
+            android:name="UserData"
+            app:argType="com.example.myapplication.pojos.UserData"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+</navigation>

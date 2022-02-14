@@ -1,0 +1,35 @@
+GET
+https://api.agify.io//?
+&country_id=US
+&name=jack
+
+
+
+
+%%%
+# Duration: 275 ms
+# GET
+# https://api.agify.io//?&country_id=US&name=jack
+
+
+# status 200
+
+@Server: nginx/1.16.1
+@Date: Fri, 11 Feb 2022 11:58:40 GMT
+@Content-Type: application/json; charset=utf-8
+@Content-Length: 54
+@Connection: keep-alive
+@Access-Control-Allow-Origin: *
+@Access-Control-Allow-Methods: GET
+@Access-Control-Allow-Headers: Content-Type, X-Genderize-Source
+@X-Rate-Limit-Limit: 1000
+@X-Rate-Reset: 43280
+@X-Rate-Limit-Remaining: 948
+@ETag: W/"36-r74jnucxhUOljZLiWkI4b0L7Sno"
+
+{
+  "name": "jack",
+  "age": 71,
+  "count": 386,
+  "country_id": "US"
+}

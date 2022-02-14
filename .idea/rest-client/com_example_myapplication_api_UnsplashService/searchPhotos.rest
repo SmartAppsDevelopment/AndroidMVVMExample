@@ -1,0 +1,15 @@
+GET
+{BASE_URL}/search/photos
+&query={query}
+&page={page}
+&per_page={per_page}
+&client_id={client_id}
+
+
+
+
+%%%
+# GET
+# /search/photos?&query={query}&page={page}&per_page={per_page}&client_id={client_id}
+
+# Error: java.lang.IllegalArgumentException: Expected URL scheme 'http' or 'https' but no colon was found
