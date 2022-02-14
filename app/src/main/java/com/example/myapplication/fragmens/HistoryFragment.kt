@@ -287,7 +287,7 @@ class HistoryFragment : Fragment(), (UserData) -> Unit {
             var countryName=""
             resources.getStringArray(R.array.countrycodes).forEachIndexed { index,data->
                 if(data.equals(userData.country_id)){
-                    countryName=resources.getStringArray(R.array.countrycodes)[index]
+                    countryName=resources.getStringArray(R.array.countrynames)[index]
                 }
             }
             with(userData){

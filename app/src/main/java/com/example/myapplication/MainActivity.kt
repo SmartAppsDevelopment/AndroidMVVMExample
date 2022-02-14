@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             .setupWithNavController(navController, appBarConfiguration)
         binding.bottomNavigation.setupWithNavController(navController)
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            if(destination.id==R.id.historyFragment){
+            if(destination.id==R.id.editFragment){
                 binding.bottomNavigation.visibility= View.GONE
             }else{
                 binding.bottomNavigation.visibility= View.VISIBLE

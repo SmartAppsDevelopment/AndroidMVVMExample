@@ -1,10 +1,12 @@
 package com.example.myapplication.fragmens
 
 import android.app.ProgressDialog
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -30,7 +32,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 class MainFragment : Fragment() {
     private val TAG = "MainFragment"
     lateinit var binding: FragmentMainBinding
-    val viewmodel by sharedViewModel<MainFragmentViewModel> ()
+    val viewmodel by sharedViewModel<MainFragmentViewModel>()
     val isBindingInit = this::binding.isInitialized
     var progress: ProgressDialog? = null
     var currentIndex = -1
@@ -42,6 +44,7 @@ class MainFragment : Fragment() {
         // Inflate the layout for this fragment
         // return inflater.inflate(R.layout.fragment_main, container, false)
         progress = ProgressDialog(context)
+        progress?.setMessage("Loading...")
         binding = DataBindingUtil.inflate<FragmentMainBinding>(
             inflater,
             R.layout.fragment_main,
@@ -53,7 +56,7 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-       //// binding.tveText.setText(viewmodel.currUserName)
+        //// binding.tveText.setText(viewmodel.currUserName)
         val items = resources.getStringArray(R.array.countrynames)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, items)
         if (true) {
@@ -69,9 +72,9 @@ class MainFragment : Fragment() {
                         if (validateCountry() != null) {
                             val dfdf = viewmodel.searchAge(SendResponseModel().apply {
                                 userName = binding.tveText.text.toString()
-                                viewmodel.currUserName=userName
+                                viewmodel.currUserName = userName
                                 country = currentCountry
-                               /// viewmodel.currentIndex
+                                /// viewmodel.currentIndex
                             })
                         } else {
                             requireContext().showToast("Select Country")
@@ -100,6 +103,20 @@ class MainFragment : Fragment() {
             }
             false
         })
+
+        binding.maincontaner.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                if (binding.autoCompletetxt.isFocused()) {
+                    val outRect = Rect()
+                    binding.autoCompletetxt.getGlobalVisibleRect(outRect)
+                    if (!outRect.contains(event.rawX.toInt(), event.rawY.toInt())) {
+                        binding.autoCompletetxt.clearFocus()
+                       /// requireContext().showToast("outside click ")
+                    }
+                }
+            }
+            false
+        }
     }
 
     private fun validateCountry(): String? {
