@@ -6,11 +6,14 @@ It is MVVM Architecture without [LiveData](https://developer.android.com/topic/l
 There is a user search feature on Github.
 
 ## Screenshot
-Main Screenshot|Result After query|Searched Data
+
+Main Screenshot|Main Select Lang|Searched Data Result
+:--:|:--:|
+<img src="images/main1.jpg" width="250px" />|<img src="images/main2.jpg" width="250px" />|<img src="images/resultss.jpg" width="250px" />
+Searched History|Edit Img Change
 :--:|:--:|:--:
-<img src="images/mainss.jpg" width="250px" />|<img src="images/resultfrag.jpg" width="250px" />|<img src="images/searchhistory.jpg" width="250px" />
-:--:|
-<img src="images/editfragss.jpg" width="250px" />|
+<img src="images/historyss.jpg" width="250px" />|<img src="images/editss.jpg" width="250px" />
+
 
 
 
