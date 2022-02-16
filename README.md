@@ -8,8 +8,9 @@ There is a user search feature on Github.
 ## Screenshot
 Main Screenshot|Result After query|Searched Data
 :--:|:--:|:--:
-<img src="images/1.jpg" width="250px" />|<img src="images/2.jpg" width="250px" />|<img src="images/3.jpg" width="250px" />
-
+<img src="images/mainss.jpg" width="250px" />|<img src="images/resultfrag.jpg" width="250px" />|<img src="images/searchhistory.jpg" width="250px" />
+:--:|
+<img src="images/editfragss.jpg" width="250px" />|
 
 
 
