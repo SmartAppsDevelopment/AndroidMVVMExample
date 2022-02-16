@@ -29,8 +29,8 @@ It is MVVM with one activity Architecture using best practices of [navigation co
 Main Screenshot|Main Select Lang|Searched Data Result
 :--:|:--:|:--:|
 <img src="images/main1.jpg" width="250px" />|<img src="images/main2.jpg" width="250px" />|<img src="images/resultss.jpg" width="250px" />
-Searched History|Edit Img Change
-<img src="images/historyss.jpg" width="250px" />|<img src="images/editss.jpg" width="250px" />
+Searched History|Edit Img Change|Whole Img Gif
+<img src="images/historyss.jpg" width="250px" />|<img src="images/editss.jpg" width="250px" />|<img src="images/gif.gif" width="250px" />
 
 
 
