@@ -5,6 +5,10 @@ It is MVVM Architecture without [LiveData](https://developer.android.com/topic/l
 
 There is a user search feature on Github.
 
+## Screenshot
+top|detail
+:--:|:--:
+<img src="images/1.jpg" width="250px" />|<img src="images/2.jpg" width="250px" />
 
 
 
