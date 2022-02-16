@@ -1,5 +1,5 @@
 # Android MVVM sample app that uses kotlin coroutines flow (without LiveData)
-This is a sample app that uses kotlin coroutines [flow](https://kotlinlang.org/docs/reference/coroutines/flow.html).
+This is a sample app  that uses kotlin coroutines [flow](https://kotlinlang.org/docs/reference/coroutines/flow.html).
 
 It is MVVM Architecture without [LiveData](https://developer.android.com/topic/libraries/architecture/livedata).
 
