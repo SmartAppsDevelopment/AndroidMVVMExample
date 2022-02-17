@@ -26,7 +26,7 @@ interface UserNameDao {
     fun getUserNameList(): Flow<List<UserData>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-     fun insertUserName(datamodel: UserData): Long
+     fun insertUserName(dataModel: UserData): Long
 
     @Delete
      fun deleteUserName(datamodel: UserData)
@@ -34,6 +34,6 @@ interface UserNameDao {
     @Update
     fun updateUser(datamodel: UserData)
 
-    @Query("SELECT * FROM userdata WHERE  name like :username AND country_id=:coutnryID")
+    @Query("SELECT * FROM userdata WHERE  name like :username AND countryId=:coutnryID")
     fun getUserByID(username: String,coutnryID:String): List<UserData>
 }

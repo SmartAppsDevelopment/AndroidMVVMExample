@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -63,8 +62,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
                     } else {
                         requireContext().showToast("Enter Name")
                     }
-
-                    Log.e("TAG", "onViewCreated: ")
                 }
             }
 
@@ -83,7 +80,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
             }
             false
         })
-
         binding.maincontaner.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_DOWN) {
                 if (binding.autoCompletetxt.isFocused) {
@@ -121,19 +117,21 @@ class MainFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
                             showLog( "observeData: Idle")
                         }
                         is ResponseModel.Loading -> {
-                            showDialog()
+                            showProgressDialog()
                             showLog( "observeData: Loading")
                         }
                         is ResponseModel.Success -> {
-                            dismissDialog()
+                            hideProgress()
                             val dir = MainFragmentDirections.actionMainFragmentToResultFragment()
-                            if (resModel.data!!.isNotEmpty()) {
+                            showLog(resModel.data!!.size.toString())
+                            if (resModel.data.isNotEmpty()) {
                                 val list = resModel.data.map {
                                     it!!
                                 }.toTypedArray()
+                                showLog(list.size.toString())
                                 dir.transfereddata = list
                                 findNavController().navigate(dir)
-                                viewModel.markIdleStsate()
+                                viewModel.markIdleState()
                             } else {
                                 requireContext().showToast("No Data Found ")
                             }
@@ -144,22 +142,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
                 }
             }
 
-        }
-    }
-
-    private fun showDialog() {
-        viewModel.viewModelScope.launch {
-            withContext(Dispatchers.Main) {
-                showDialog()
-            }
-        }
-    }
-
-    private fun dismissDialog() {
-        viewModel.viewModelScope.launch {
-            withContext(Dispatchers.Main) {
-                hideProgress()
-            }
         }
     }
 

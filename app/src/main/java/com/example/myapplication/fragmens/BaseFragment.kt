@@ -7,19 +7,18 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.viewbinding.ViewBinding
 import com.kaopiz.kprogresshud.KProgressHUD
 
-open class BaseFragment<T : ViewDataBinding>(var layoutid: Int) : Fragment() {
+open class BaseFragment<T : ViewDataBinding>(private var layoutId: Int) : Fragment() {
     lateinit var binding: T
     val isBindingInit by lazy { this::binding.isInitialized }
-    var progressDialog: KProgressHUD? = null
+    private var progressDialog: KProgressHUD? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate<T>(inflater, layoutid, null, false)
+        binding = DataBindingUtil.inflate(inflater, layoutId, null, false)
         return binding.root
     }
 
@@ -29,16 +28,9 @@ open class BaseFragment<T : ViewDataBinding>(var layoutid: Int) : Fragment() {
     }
 
     fun showProgressDialog() {
-        progressDialog = KProgressHUD.create(requireContext())
-        progressDialog?.let {
-            it.setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setLabel("Please wait")
-                //   .setDetailsLabel("Downloading data")
-                .setCancellable(true)
-                .setAnimationSpeed(2)
-                .setDimAmount(0.5f)
-                .show()
-        }
+        progressDialog = progressDialog ?: KProgressHUD.create(requireActivity())
+        progressDialog?.setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)?.setLabel("Please wait")
+            ?.setCancellable(true)?.setAnimationSpeed(2)?.setDimAmount(0.5f)?.show()
 
     }
 

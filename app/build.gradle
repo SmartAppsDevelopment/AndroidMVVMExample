@@ -46,7 +46,7 @@ allprojects {
 }
 dependencies {
 
-//////////////////////////Android base libraries 
+    ///Android base libraries
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'com.google.android.material:material:1.4.0'
@@ -55,48 +55,39 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
-    //////////////////For custom dialog
+     //For custom dialog
     implementation 'com.kaopiz:kprogresshud:1.2.0'
-/////////////////////////Room Database with flows
+    //Room Database with flows
     implementation("androidx.room:room-runtime:$rootProject.roomVersion")
     annotationProcessor("androidx.room:room-compiler:$rootProject.roomVersion")
     // To use Kotlin annotation processing tool (kapt)
     kapt("androidx.room:room-compiler:$rootProject.roomVersion")
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation("androidx.room:room-ktx:$rootProject.roomVersion")
-///////////////////////////For navigation component
+     //For navigation component
     implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
     implementation "androidx.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
-/////////////////////////////////////Gson For map json to class
+    //Gson For map json to class
     implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
     implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttpLoggingVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
-//////////////////////////////Coroutines
+     //Coroutines
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutinesVersion"
 
-//////////////////ktx for runtime ktx
+    //ktx for runtime ktx
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
     implementation "androidx.fragment:fragment-ktx:1.4.1"
-/////////////////////////Koin Dependency Injection
-    //implementation "com.google.dagger:hilt-android:$koin_version"
-    ///kapt "com.google.dagger:hilt-android-compiler:$koin_version"
+    /////Koin Dependency Injection
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
-//    // Koin Core features
-//    implementation "io.insert-koin:koin-core:$koin_version"
-//    // Koin main features for Android
-//    implementation "io.insert-koin:koin-android:$koin_version"
-/////////////////////////Apachi Common IO for Common File operations
+     //Apachi Common IO for Common File operations
     implementation 'org.apache.commons:commons-collections4:4.1'
     implementation 'org.apache.commons:commons-io:1.3.2'
-///////////////////////////////Picasso For loading Images
+    //Picasso For loading Images
     implementation 'com.squareup.picasso:picasso:2.71828'
    //Saving File as pdf
     implementation 'com.itextpdf:itextpdf:5.5.13'
-
-
-
 
 }

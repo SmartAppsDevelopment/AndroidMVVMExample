@@ -18,7 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
-import com.example.myapplication.adapters.HistoryFragmnetAdapter
+import com.example.myapplication.adapters.HistoryFragmentAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
 import com.example.myapplication.helper.*
 import com.example.myapplication.pojos.UserData
@@ -42,7 +42,7 @@ import java.util.*
 class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_history),
         (UserData) -> Unit {
     private val viewModel by viewModels<HistoryFragmentViewModel>()
-    private var adapter = HistoryFragmnetAdapter().apply {
+    private var adapter = HistoryFragmentAdapter().apply {
         delUserCallback = this@HistoryFragment
     }
 
@@ -241,7 +241,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
 
             var countryName = ""
             resources.getStringArray(R.array.countrycodes).forEachIndexed { _, data ->
-                if (data.equals(userData.country_id)) {
+                if (data.equals(userData.countryId)) {
                     countryName = resources.getStringArray(R.array.countrynames)[index]
                 }
             }

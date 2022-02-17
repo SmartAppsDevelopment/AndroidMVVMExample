@@ -6,8 +6,11 @@
     <string name="histroty">History</string>
     <string name="head_count">Head Count</string>
     <string name="age">Age</string>
-    <string name="name">Name</string>
+    <string name="name">Name </string>
     <string name="author">O3 Interfaces</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="select_country">Select Country</string>
+    <string name="search">Search</string>
 
     <string-array name="countrynames">
         <item>France</item>

@@ -20,14 +20,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.myapplication.helper.DATABASE_NAME
 import com.example.myapplication.pojos.UserData
 
 /**
  * The Room database for this app
  */
-@Database(entities = [UserData::class], version = 3, exportSchema = false)
+@Database(entities = [UserData::class], version = 4, exportSchema = false)
 abstract class AppLocalDatabase : RoomDatabase() {
     abstract fun userNameDao(): UserNameDao
     companion object {
@@ -43,11 +42,9 @@ abstract class AppLocalDatabase : RoomDatabase() {
         private fun buildDatabase(context: Context): AppLocalDatabase {
             return Room.databaseBuilder(context, AppLocalDatabase::class.java, DATABASE_NAME)
                 .allowMainThreadQueries()
+                .fallbackToDestructiveMigration()
                 .addCallback(
                     object : RoomDatabase.Callback() {
-                        override fun onCreate(db: SupportSQLiteDatabase) {
-                            super.onCreate(db)
-                        }
                     }
                 )
                 .build()

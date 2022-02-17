@@ -16,7 +16,7 @@
 
 package com.example.myapplication.adapters
 
-import android.os.Build
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -30,18 +30,17 @@ import com.example.myapplication.fragmens.HistoryFragmentDirections
 import com.example.myapplication.helper.PicassoCircleTransformation
 import com.example.myapplication.pojos.UserData
 import com.squareup.picasso.Picasso
-import com.squareup.picasso.Transformation
 import java.io.File
 
 
-class HistoryFragmnetAdapter :
-    ListAdapter<UserData, HistoryFragmnetAdapter.ViewHolder>(
+class HistoryFragmentAdapter :
+    ListAdapter<UserData, HistoryFragmentAdapter.ViewHolder>(
         ResultItemDiffCallback()
     ) {
 var delUserCallback:((userData:UserData)->Unit)?=null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            DataBindingUtil.inflate<HistoryfragitemBinding>(
+            DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.historyfragitem,
                 parent,
@@ -61,6 +60,7 @@ var delUserCallback:((userData:UserData)->Unit)?=null
     class ViewHolder(
          val binding: HistoryfragitemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(user: UserData) {
             binding.btnedit.setOnClickListener {
                 val dir = HistoryFragmentDirections.actionHistoryFragmentToEditFragment()
@@ -68,26 +68,21 @@ var delUserCallback:((userData:UserData)->Unit)?=null
                 it.findNavController().navigate(dir)
             }
             with(binding) {
-                tvCount.setText("HeadCount " + user.count.toString())
-                tvCountry.setText("Country " + user.country_id)
-                if (!user.age.isNullOrEmpty()) {
-                    tvAge.setText("Age " + user.age.toString())
+                tvCount.text=("HeadCount " + user.count.toString())
+                tvCountry.text=("Country " + user.countryId)
+                if (user.age.isNotEmpty()) {
+                    tvAge.text=("Age " + user.age)
                 } else {
-                    tvAge.setText("Age 0")
+                    tvAge.text=("Age 0")
                 }
-                tvName.setText("Name " + user.name)
+                tvName.text=(tvName.context.resources.getString(R.string.name) +" ${user.name}" )
 
-                if (!user.userImageRef.isNullOrEmpty()) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        val fileref = File(user.userImageRef)
-                        if (fileref.exists()) {
-                            Picasso.get().load(fileref).transform(PicassoCircleTransformation())
-                                .into(binding.ivAvatar);
-                        }
-                        Log.e("TAG", "bind: ")
-
+                if (user.userImageRef.isNotEmpty()) {
+                    val fileRef = File(user.userImageRef)
+                    if (fileRef.exists()) {
+                        Picasso.get().load(fileRef).transform(PicassoCircleTransformation())
+                            .into(binding.ivAvatar)
                     }
-                    // binding.ivAvatar.setImageURI(uuri)
                 }
                 executePendingBindings()
             }

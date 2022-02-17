@@ -17,17 +17,16 @@
 package com.example.myapplication.api
 
 
+
 import com.example.myapplication.pojos.UserData
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import retrofit2.http.QueryMap
 
 /**
  * Used to connect to the Unsplash API to fetch photos
@@ -35,10 +34,10 @@ import retrofit2.http.QueryMap
 interface AgifyService {
 
     @GET("?")
-   suspend fun getSingleNameAge(@Query("country_id") countryid: String,@Query("name") userName: String): Response<UserData>
+   suspend fun getSingleNameAge(@Query("country_id") countryId: String, @Query("name") userName: String): Response<UserData>
 
     @GET("?")
-   suspend fun getMultipleNamesAge(@Query("country_id") countryid: String,@Query("name[]") userNames: List<String>): Response<List<UserData>>
+   suspend fun getMultipleNamesAge(@Query("country_id") countryId: String, @Query("name[]") userNames: List<String>): Response<List<UserData>>
 
     companion object {
         private const val BASE_URL = "https://api.agify.io/"

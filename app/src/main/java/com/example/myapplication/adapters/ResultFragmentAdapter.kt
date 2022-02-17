@@ -16,6 +16,7 @@
 
 package com.example.myapplication.adapters
 
+import android.annotation.SuppressLint
 import com.example.myapplication.pojos.UserData
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -27,14 +28,14 @@ import com.example.myapplication.R
 import com.example.myapplication.databinding.ResultfragitemBinding
 
 
-class ResultFragmnetAdapter :
-    ListAdapter<UserData, ResultFragmnetAdapter.ViewHolder>(
+class ResultFragmentAdapter:
+    ListAdapter<UserData, ResultFragmentAdapter.ViewHolder>(
         ResultItemDiffCallback()
     ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            DataBindingUtil.inflate<ResultfragitemBinding>(
+            DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.resultfragitem,
                 parent,
@@ -50,15 +51,16 @@ class ResultFragmnetAdapter :
     class ViewHolder(
         private val binding: ResultfragitemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        @SuppressLint("SetTextI18n")
         fun bind(user: UserData) {
             with(binding) {
-                tvCount.setText("HeadCount " + user.count.toString())
-                if (!user.age.isNullOrEmpty()) {
-                    tvAge.setText("Age " + user.age.toString())
+                tvCount.text=("HeadCount " + user.count.toString())
+                if (user.age!=null) {
+                    tvAge.text=("Age " + user.age)
                 } else {
-                    tvAge.setText("Age 0")
+                    tvAge.text=("Age 0")
                 }
-                tvName.setText("Name " + user.name)
+                tvName.text=("Name " + user.name)
                 executePendingBindings()
             }
         }

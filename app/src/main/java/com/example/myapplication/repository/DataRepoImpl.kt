@@ -12,76 +12,122 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 
-class DataRepoImpl @Inject constructor(networkModel: NetworkModule):AbsDataRepo(networkModel) {
+class DataRepoImpl @Inject constructor(private var networkModel: NetworkModule) : DataRepo {
 
-    fun identifySourceOfDATA(query: String): DataSourceType {
+    private fun identifySourceOfDATA(): DataSourceType {
         /////////////////////////check for local db if exist then from local
         return DataSourceType.FROM_NETWORK
     }
 
-    /**
-     *
-     */
+    override fun getAllDataFromLocalDb(): Flow<List<UserData>> {
+        return networkModel.sourceOfTruthLocalDB().userNameDao().getUserNameList()
+
+    }
+
+    override fun delDataFromRoom(body: UserData) {
+        networkModel.sourceOfTruthLocalDB().userNameDao().deleteUserName(body)
+    }
+
+    override fun updateUser(dataModel: UserData) {
+        networkModel.sourceOfTruthLocalDB().userNameDao().updateUser(dataModel)
+    }
 
     override suspend fun getSearchResultStream(
         query: SendResponseModel
     ): Flow<List<UserData?>> {
-        return when (identifySourceOfDATA(query.userName)) {
-            DataSourceType.FROM_NETWORK -> getDataFromNetWork(query)
-            DataSourceType.FROM_LOCALDB -> getDataFromLocalDb(query)
+        return when (identifySourceOfDATA()) {
+            DataSourceType.FROM_NETWORK -> getData(query)
+            DataSourceType.FROM_LOCALDB -> TODO()
         }
     }
 
-    override suspend fun getDataFromNetWork(
+    private fun isRequestForMultipleUser(query: SendResponseModel): Boolean {
+        return query.userName.contains(",")
+    }
+
+    private suspend fun getData(
         query: SendResponseModel
     ): Flow<List<UserData?>> {
-
         return flow {
-            if (doesthisRequestForMultipleUser(query)) {
-                ///////////////////////////////for multiple user
-                val listToSendBack = arrayListOf<UserData>()
-                val listOfUserNameNotFound = arrayListOf<String>()
-                ///   val listOfData = arrayListOf<Pair<Boolean, String>>()
-                query.userName.split(",").map {
-                    it.trim()
-                }.toList().forEachIndexed { index, s ->
-                    val dec = doesUserExistInLocalDB(SendResponseModel(query.country, s))
-                    if (dec.size > 0)
-                        listToSendBack.addAll(dec)
-                    else
-                        listOfUserNameNotFound.add(s)
-                }
-                try {
-                    if (listOfUserNameNotFound.size>0) {
-                        val response = networkModule.sourceOfTruthNetworkDB()
-                            .getMultipleNamesAge(query.country, listOfUserNameNotFound)
-                        listToSendBack.addAll(response.body()!!)
-                    }
-                    sendDataToRoom(listToSendBack)
-                    emit(listToSendBack)
-                } catch (e: Exception) {
-                    emit(listToSendBack)
-                }
+            if (isRequestForMultipleUser(query)) {
+              emit(hitApiOrDbMultiUser(query))
             } else {
-                val listFromLocalDb = doesUserExistInLocalDB(query)
-                if (listFromLocalDb.size > 0) {
-                    ///////////////////////////////Send From Local Db
-                    emit(listFromLocalDb)
-                } else {
-                    /////////////////////Request To remote server
-                    try {
-                        val response = networkModule.sourceOfTruthNetworkDB()
-                            .getSingleNameAge(query.country, query.userName).body()
-                        sendDataToRoom(listOf(response!!))
-                        emit(listOf(response!!))
-                    } catch (e: Exception) {
-                        showLog("getDataFromNetWork: " + e.message)
-                        emit(emptyList())
-                    }
-                }
-
+                emit(hitApiOrDbSingleUser(query))
             }
         }.flowOn(Dispatchers.IO)
+    }
+
+    private suspend fun hitApiOrDbMultiUser(query: SendResponseModel):List<UserData> {
+        val listToSendBack = arrayListOf<UserData>()
+        val pairRes = getExistingNotExistUserLists(query)
+        listToSendBack.addAll(pairRes.first)
+        return try {
+            if (pairRes.second.isNotEmpty()) {
+                val response = getDataFromNetworkMultiUser(query.country, pairRes.second)
+                if (response != null) {
+                    listToSendBack.addAll(response)
+                }
+            }
+            sendDataToRoom(listToSendBack)
+            (listToSendBack)
+        } catch (e: Exception) {
+            (listToSendBack)
+        }
+    }
+
+    private suspend fun hitApiOrDbSingleUser(query: SendResponseModel):List<UserData> {
+        val listFromLocalDb = doesUserExistInLocalDB(query)
+        return listFromLocalDb.ifEmpty {
+            try {
+                val response = getDataFromNetworkSingleUser(query)
+                sendDataToRoom(listOf(response!!))
+                (listOf(response))
+            } catch (e: Exception) {
+                showLog("getDataFromNetWork: " + e.message)
+                (emptyList())
+            }
+        }
+    }
+
+    private fun getExistingNotExistUserLists(query: SendResponseModel): Pair<List<UserData>, List<String>> {
+        val listToSendBack = arrayListOf<UserData>()
+        val listOfUserNameNotFound = arrayListOf<String>()
+        query.userName.split(",").map {
+            it.trim()
+        }.toList().forEachIndexed { _, s ->
+            val dec = doesUserExistInLocalDB(SendResponseModel(query.country, s))
+            if (dec.isNotEmpty())
+                listToSendBack.addAll(dec)
+            else
+                listOfUserNameNotFound.add(s)
+        }
+        return Pair(listToSendBack, listOfUserNameNotFound)
+    }
+
+    private suspend fun getDataFromNetworkSingleUser(query: SendResponseModel): UserData? {
+        return networkModel.sourceOfTruthNetworkDB()
+            .getSingleNameAge(query.country, query.userName).body()
+    }
+
+    private suspend fun getDataFromNetworkMultiUser(
+        query: String,
+        listOfUserName: List<String>
+    ): List<UserData>? {
+        return networkModel.sourceOfTruthNetworkDB()
+            .getMultipleNamesAge(query, listOfUserName).body()
+    }
+
+    private fun sendDataToRoom(body: List<UserData>) {
+        body.forEach {
+            val longId = networkModel.sourceOfTruthLocalDB().userNameDao().insertUserName(it)
+            showLog("sendDataToRoom: $longId")
+        }
+    }
+
+    private fun doesUserExistInLocalDB(userData: SendResponseModel): List<UserData> {
+        return networkModel.sourceOfTruthLocalDB()
+            .userNameDao()
+            .getUserByID(userData.userName, userData.country)
     }
 
 }

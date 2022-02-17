@@ -6,8 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.helper.ResponseModel
 import com.example.myapplication.pojos.SendResponseModel
 import com.example.myapplication.pojos.UserData
+import com.example.myapplication.repository.DataRepo
 import com.example.myapplication.repository.DataRepoImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -15,37 +17,29 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainFragmentViewModel @Inject constructor(
-    private var dataRepoImpl: DataRepoImpl,
+    private var dataRepoImpl: DataRepo,
     private var savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val TAG = "MainFragmentViewModel"
 
     // Keep the key as a constant
     companion object {
-        private val USER_NAME = "USERNAMELIST"
-        private val CONTRY_INDEX = "country"
+        private const val USER_NAME = "USERNAMES"
     }
-var currUserName:String=""
-    set(value) {
-        savedStateHandle.set(USER_NAME,value)
-        field=value
-    }
-    get()=savedStateHandle.get<String>(USER_NAME)?:""
-    var currentIndex: Int = 0
+
+    var currUserName: String = ""
         set(value) {
-            savedStateHandle.set(CONTRY_INDEX,value)
-            field =value
+            savedStateHandle.set(USER_NAME, value)
+            field = value
         }
-        get() =savedStateHandle.get<Int>(CONTRY_INDEX)?:0
+        get() = savedStateHandle.get<String>(USER_NAME) ?: ""
 
     val uiUpdates =
-        MutableStateFlow<ResponseModel<List<UserData?>>>(ResponseModel.Idle("Idel State"))
+        MutableStateFlow<ResponseModel<List<UserData?>>>(ResponseModel.Idle("Ideal State"))
     private var currentQueryValue: SendResponseModel? = null
 
 
     suspend fun searchAge(queryString: SendResponseModel) {
         currentQueryValue = queryString
-        //  uiUpdates.value=ResponseModel.Loading()
         uiUpdates.emit(ResponseModel.Loading())
         dataRepoImpl.getSearchResultStream(queryString).collect {
             viewModelScope.launch {
@@ -54,12 +48,9 @@ var currUserName:String=""
         }
     }
 
-    fun markIdleStsate() {
-        uiUpdates.value = ResponseModel.Idle("Idel")
+    fun markIdleState() {
+        uiUpdates.value = ResponseModel.Idle("Ideal")
     }
 
-//    fun setCurrentIndex(index: Int) {
-//        savedStateHandle.set(CONTRY_INDEX, index)
-//    }
 
 }

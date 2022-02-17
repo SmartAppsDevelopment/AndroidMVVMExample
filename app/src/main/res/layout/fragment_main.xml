@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_margin="20dp"
             android:layout_height="wrap_content"
-            android:hint="Enter Name"
+            android:hint="@string/enter_name"
             app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@+id/spinnertv"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,9 +53,10 @@
 
                 android:clickable="true"
                 android:imeOptions="actionSearch"
-                android:hint="Select Country"
+                android:hint="@string/select_country"
                 android:layout_height="wrap_content"
-                android:inputType="none" />
+                android:inputType="none"
+                android:focusable="true" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -63,7 +64,7 @@
             android:id="@+id/btnsearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search"
+            android:text="@string/search"
             android:layout_margin="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
