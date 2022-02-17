@@ -6,6 +6,11 @@ pluginManagement {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        jcenter() {
+            content {
+                includeModule("com.kaopiz", "kprogresshud")
+            }
+        }
     }
 }
 dependencyResolutionManagement {
@@ -15,6 +20,11 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        jcenter() {
+            content {
+                includeModule("com.kaopiz", "kprogresshud")
+            }
+        }
     }
 }
 rootProject.name = "My Application"

@@ -1,24 +1,18 @@
 package com.example.myapplication.fragmens
 
-import android.app.ProgressDialog
-import android.content.ContentResolver
-import android.content.Context
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.util.Log
-import android.view.*
-import android.webkit.MimeTypeMap
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.content.MimeTypeFilter
-import androidx.core.os.EnvironmentCompat
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -26,89 +20,82 @@ import androidx.lifecycle.viewModelScope
 import com.example.myapplication.R
 import com.example.myapplication.adapters.HistoryFragmnetAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
-import com.example.myapplication.helper.ResponseModel
-import com.example.myapplication.helper.showToast
+import com.example.myapplication.helper.*
 import com.example.myapplication.pojos.UserData
 import com.example.myapplication.viewmodel.HistoryFragmentViewModel
 import com.itextpdf.text.*
-import com.itextpdf.text.html.WebColors
 import com.itextpdf.text.pdf.CMYKColor
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
-import com.itextpdf.text.pdf.PdfWriter
 import com.itextpdf.text.pdf.draw.LineSeparator
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import java.io.*
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.ContentValues as ContentValues1
 
-
-class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_history), (UserData) -> Unit {
-    private val TAG = "ResultFragment"
-    var progress: ProgressDialog? = null
-
-    //    val args: ResultFragmentArgs by navArgs()
-    val viewmodel by viewModel<HistoryFragmentViewModel>()
-    var resultFragmnetAdapter = HistoryFragmnetAdapter().apply {
-
+@AndroidEntryPoint
+class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_history),
+        (UserData) -> Unit {
+    private val viewModel by viewModels<HistoryFragmentViewModel>()
+    private var adapter = HistoryFragmnetAdapter().apply {
         delUserCallback = this@HistoryFragment
     }
 
+    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
-        binding.rv.adapter = resultFragmnetAdapter
-        progress = ProgressDialog(context)
-        progress?.setMessage("Loading Data")
+        binding.rv.adapter = adapter
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                viewmodel.uiUpdates.collectLatest {
+                viewModel.uiUpdates.collectLatest {
                     when (it) {
                         is ResponseModel.Error -> {
-                            Log.e(TAG, "eee")
+                            showLog("Error")
                         }
                         is ResponseModel.Idle -> {
-                            Log.e(TAG, "iiii")
+                            showLog("Ideal")
                         }
                         is ResponseModel.Loading -> {
                             showDialog()
-                            Log.e(TAG, "llll")
-                        }
+                            showLog("Loading")
+                         }
                         is ResponseModel.Success -> {
                             dismissDialog()
-                            if ((it.data.isNullOrEmpty()) and (it.data!!.size <= 0)) {
+                            if ((it.data.isNullOrEmpty()) and (it.data!!.isEmpty())) {
                                 requireContext().showToast("No Data Found")
-                                resultFragmnetAdapter.submitList(null)
+                                adapter.submitList(null)
 
-                            } else
-                                resultFragmnetAdapter.submitList(it.data)
+                            } else {
+                                adapter.submitList(it.data)
+                            }
                         }
                     }
                 }
             }
         }
-        viewmodel.viewModelScope.launch {
-            viewmodel.getDataFromLocalDb()
+        viewModel.viewModelScope.launch {
+            viewModel.getDataFromLocalDb()
         }
     }
 
-    fun showDialog() {
-        viewmodel.viewModelScope.launch {
+    private fun showDialog() {
+        viewModel.viewModelScope.launch {
             withContext(Dispatchers.Main) {
-                progress?.show()
+                showProgressDialog()
             }
         }
     }
 
-    fun dismissDialog() {
-        viewmodel.viewModelScope.launch {
+    private fun dismissDialog() {
+        viewModel.viewModelScope.launch {
             withContext(Dispatchers.Main) {
-                progress?.hide()
+                hideProgress()
             }
         }
     }
@@ -124,58 +111,47 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
     }
 
     override fun invoke(userData: UserData) {
-        viewmodel.delUser(userData)
+        viewModel.delUser(userData)
     }
 
 
-    var headColor = WebColors.getRGBColor("#DEDEDE")
-    var tableHeadColor = WebColors.getRGBColor("#F5ABAB")
-    fun createPDF() {
+    private var headColor: BaseColor = BaseColor.BLUE
+    private var tableHeadColor = BaseColor.LIGHT_GRAY!!
+
+    @SuppressLint("SimpleDateFormat")
+    private fun createPDF() {
         //Create document file
         val document = Document()
         try {
-            val format = SimpleDateFormat("dd-MMM-yyyy HH:mm:ss a")
-            val dateFormat = SimpleDateFormat("ddMMyyyy_HHmm")
-//            val outputStream = FileOutputStream(
-            val outputStream =
-                saveFileUsingMediaStore(
-                        requireContext(),
-                        "AndroPDF_" + (0..1000).random()+"_"+ dateFormat.format(Calendar.getInstance().getTime())
-                            .toString() + ".pdf"
-                    )
-
-            ///  )
-            val writer: PdfWriter = PdfWriter.getInstance(document, outputStream)
-
+            val format = SimpleDateFormat(GET_DATE_PATTERN1)
+            val dateFormat = SimpleDateFormat(GET_DATE_PATTERN2)
             //Open the document
             document.open()
-            document.setPageSize(PageSize.A4)
+            document.pageSize = PageSize.A4
             document.addCreationDate()
-            document.addAuthor("AndroPDF")
-            document.addCreator("http://chonchol.me")
-
+            document.addAuthor(getString(R.string.author))
             //Create Header table
             val header = PdfPTable(3)
-            header.setWidthPercentage(100f)
+            header.widthPercentage = 100f
             val fl = floatArrayOf(20f, 45f, 35f)
             header.setWidths(fl)
             var cell = PdfPCell()
-            cell.setBorder(Rectangle.NO_BORDER)
+            cell.border = Rectangle.NO_BORDER
 
             //Set Logo in Header Cell
-            val logo: Drawable =
-                this.getResources().getDrawable(android.R.mipmap.sym_def_app_icon)
+
+            val logo: Drawable = ResourcesCompat.getDrawable(
+                resources,
+                android.R.mipmap.sym_def_app_icon,
+                activity?.theme!!
+            )!!
             val bitmap = (logo as BitmapDrawable).bitmap
             val stream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val bitmapLogo: ByteArray = stream.toByteArray()
             try {
-//                val imgReportLogo = Image.getInstance(bitmapLogo)
-//                imgReportLogo.setAbsolutePosition(330f, 642f)
-//                cell.addElement(imgReportLogo)
                 header.addCell(cell)
                 cell = PdfPCell()
-                cell.setBorder(Rectangle.NO_BORDER)
+                cell.border = Rectangle.NO_BORDER
 
                 // Heading
                 //BaseFont font = BaseFont.createFont("assets/fonts/brandon_medium.otf", "UTF-8", BaseFont.EMBEDDED);
@@ -186,71 +162,65 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
                 //Paragraph
                 val titleParagraph = Paragraph(titleChunk)
                 cell.addElement(titleParagraph)
-                cell.addElement(Paragraph("Number of user count ${resultFragmnetAdapter.currentList.size}"))
+                cell.addElement(Paragraph("Number of user count ${adapter.currentList.size}"))
                 cell.addElement(
                     Paragraph(
                         "Date: " + format.format(
-                            Calendar.getInstance().getTime()
+                            Calendar.getInstance().time
                         )
                     )
                 )
                 header.addCell(cell)
                 cell = PdfPCell(Paragraph(""))
-                cell.setBorder(Rectangle.NO_BORDER)
+                cell.border = Rectangle.NO_BORDER
                 header.addCell(cell)
                 val pTable = PdfPTable(1)
-                pTable.setWidthPercentage(100f)
+                pTable.widthPercentage = 100f
                 cell = PdfPCell()
-                cell.setColspan(1)
+                cell.colspan = 1
                 cell.addElement(header)
                 pTable.addCell(cell)
                 val table = PdfPTable(6)
                 val columnWidth = floatArrayOf(6f, 30f, 30f, 20f, 20f, 30f)
                 table.setWidths(columnWidth)
                 cell = PdfPCell()
-                cell.setBackgroundColor(headColor)
-                cell.setColspan(6)
+                cell.backgroundColor = headColor
+                cell.colspan = 6
                 cell.addElement(pTable)
                 table.addCell(cell)
 
-                val ftable = PdfPTable(6)
-                ftable.setWidthPercentage(100f)
-                val columnWidtha = floatArrayOf(30f, 10f, 30f, 10f, 30f, 10f)
-                ftable.setWidths(columnWidtha)
+                val fable = PdfPTable(6)
+                fable.widthPercentage = 100f
+                val columnWidths = floatArrayOf(30f, 10f, 30f, 10f, 30f, 10f)
+                fable.setWidths(columnWidths)
                 cell = PdfPCell()
-                cell.setColspan(6)
-                cell.setBackgroundColor(tableHeadColor)
+                cell.colspan = 6
+                cell.backgroundColor = tableHeadColor
                 cell = PdfPCell(Phrase("Total Number"))
-                cell.setBorder(Rectangle.NO_BORDER)
-                cell.setBackgroundColor(tableHeadColor)
-                ftable.addCell(cell)
+                cell.border = Rectangle.NO_BORDER
+                cell.backgroundColor = tableHeadColor
+                fable.addCell(cell)
                 cell = PdfPCell(Phrase(""))
-                cell.setBorder(Rectangle.NO_BORDER)
-                cell.setBackgroundColor(tableHeadColor)
-                ftable.addCell(cell)
+                cell.border = Rectangle.NO_BORDER
+                cell.backgroundColor = tableHeadColor
+                fable.addCell(cell)
                 cell = PdfPCell(Phrase(""))
-                cell.setBorder(Rectangle.NO_BORDER)
-                cell.setBackgroundColor(tableHeadColor)
-                ftable.addCell(cell)
+                cell.border = Rectangle.NO_BORDER
+                cell.backgroundColor = tableHeadColor
+                fable.addCell(cell)
 
                 cell = PdfPCell(Phrase(""))
-                cell.setBorder(Rectangle.NO_BORDER)
-                cell.setBackgroundColor(tableHeadColor)
-                ftable.addCell(cell)
+                cell.border = Rectangle.NO_BORDER
+                cell.backgroundColor = tableHeadColor
+                fable.addCell(cell)
                 document.add(table)
-//
-//                val p1 = Paragraph("Total Numbe of Items " + resultFragmnetAdapter.currentList.size)
-//                val paraFont = Font(Font.FontFamily.COURIER, 18f)
-//                p1.alignment = Paragraph.ALIGN_CENTER
-//                p1.font = paraFont
-//                document.add(p1)
                 addDataToDoc(document)
 
 
 
                 Toast.makeText(
                     requireContext(),
-                    "New PDF named AndroPDF" + dateFormat.format(Calendar.getInstance().getTime())
+                    "New PDF named " + dateFormat.format(Calendar.getInstance().time)
                         .toString() + ".pdf successfully generated at DOWNLOADS folder",
                     Toast.LENGTH_LONG
                 ).show()
@@ -267,15 +237,15 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
     }
 
     private fun addDataToDoc(document: Document) {
-        resultFragmnetAdapter.currentList.forEachIndexed { index, userData ->
+        adapter.currentList.forEachIndexed { index, userData ->
 
-            var countryName=""
-            resources.getStringArray(R.array.countrycodes).forEachIndexed { index,data->
-                if(data.equals(userData.country_id)){
-                    countryName=resources.getStringArray(R.array.countrynames)[index]
+            var countryName = ""
+            resources.getStringArray(R.array.countrycodes).forEachIndexed { _, data ->
+                if (data.equals(userData.country_id)) {
+                    countryName = resources.getStringArray(R.array.countrynames)[index]
                 }
             }
-            with(userData){
+            with(userData) {
                 val p2 = Paragraph(
                     "Name: $name\n" +
                             "Age:  $age \n" +
@@ -293,25 +263,5 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
         }
     }
 
-
-
-    private fun saveFileUsingMediaStore(context: Context, fileName: String): OutputStream? {
-        val contentValues = ContentValues1().apply {
-            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
-            put(MediaStore.MediaColumns.MIME_TYPE, MimeTypeMap.getSingleton().getMimeTypeFromExtension(".pdf"))
-            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
-        }
-        val resolver = context.contentResolver
-        val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
-        } else {
-            resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
-        }
-        if (uri != null) {
-//            URL(url).openStream().use { input ->
-              return resolver.openOutputStream(uri)
-        }
-        return  null
-    }
 
 }

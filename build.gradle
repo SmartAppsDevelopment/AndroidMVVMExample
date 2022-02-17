@@ -6,7 +6,8 @@ buildscript {
         compileSdkVersion = 31
         minSdkVersion = 21
         targetSdkVersion = 31
-        koin_version = "3.1.5"
+       // koin_version = "3.1.5"
+        hilt_version = "2.38.1"
         // App dependencies
         appCompatVersion = '1.1.0'
         constraintLayoutVersion = '2.0.0-beta3'
@@ -45,6 +46,8 @@ buildscript {
     dependencies {
         def nav_version = "2.4.1"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.38.1'
+
     }
 
 }

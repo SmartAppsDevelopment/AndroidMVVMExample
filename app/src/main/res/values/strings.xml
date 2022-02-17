@@ -4,6 +4,10 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="home">Home</string>
     <string name="histroty">History</string>
+    <string name="head_count">Head Count</string>
+    <string name="age">Age</string>
+    <string name="name">Name</string>
+    <string name="author">O3 Interfaces</string>
 
     <string-array name="countrynames">
         <item>France</item>

@@ -1,24 +1,22 @@
 package com.example.myapplication.repository
 
-import android.util.Log
 import com.example.myapplication.di.NetworkModule
-import com.example.myapplication.helper.DATA_SOURCE_TYPES
-import com.example.myapplication.helper.ResponseModel
+import com.example.myapplication.helper.DataSourceType
+import com.example.myapplication.helper.showLog
 import com.example.myapplication.pojos.SendResponseModel
 import com.example.myapplication.pojos.UserData
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import javax.inject.Inject
 
 
-class DataRepoImpl(networkModel: NetworkModule):AbsDataRepo(networkModel) {
-    private val TAG = "DataRepo"
+class DataRepoImpl @Inject constructor(networkModel: NetworkModule):AbsDataRepo(networkModel) {
 
-    fun identifySourceOfDATA(query: String): DATA_SOURCE_TYPES {
+    fun identifySourceOfDATA(query: String): DataSourceType {
         /////////////////////////check for local db if exist then from local
-        return DATA_SOURCE_TYPES.FROM_NETWORK
+        return DataSourceType.FROM_NETWORK
     }
 
     /**
@@ -29,8 +27,8 @@ class DataRepoImpl(networkModel: NetworkModule):AbsDataRepo(networkModel) {
         query: SendResponseModel
     ): Flow<List<UserData?>> {
         return when (identifySourceOfDATA(query.userName)) {
-            DATA_SOURCE_TYPES.FROM_NETWORK -> getDataFromNetWork(query)
-            DATA_SOURCE_TYPES.FROM_LOCALDB -> getDataFromLocalDb(query)
+            DataSourceType.FROM_NETWORK -> getDataFromNetWork(query)
+            DataSourceType.FROM_LOCALDB -> getDataFromLocalDb(query)
         }
     }
 
@@ -77,7 +75,7 @@ class DataRepoImpl(networkModel: NetworkModule):AbsDataRepo(networkModel) {
                         sendDataToRoom(listOf(response!!))
                         emit(listOf(response!!))
                     } catch (e: Exception) {
-                        Log.e(TAG, "getDataFromNetWork: " + e.message)
+                        showLog("getDataFromNetWork: " + e.message)
                         emit(emptyList())
                     }
                 }

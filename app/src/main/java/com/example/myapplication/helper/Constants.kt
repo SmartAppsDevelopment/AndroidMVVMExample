@@ -5,7 +5,7 @@ import java.io.File
 
 
 object FileRef{
-     fun getBaseFile(context: Context): File {
+     private fun getBaseFile(context: Context): File {
        val ff= File( context.filesDir,"AppBaseDir")
          if(!ff.exists())
              ff.mkdir()
@@ -15,7 +15,7 @@ object FileRef{
         return File( getBaseFile(context),"IMG_"+String.format("%60d",(1..10000).random())+".jpg")
     }
 }
-enum class DATA_SOURCE_TYPES{
+enum class DataSourceType{
     FROM_NETWORK,
     FROM_LOCALDB
 }
@@ -36,4 +36,6 @@ sealed class ResponseModel<T>(
 }
 
 const val DATABASE_NAME = "sunflower-db"
+const val GET_DATE_PATTERN1 = "dd-MMM-yyyy HH:mm:ss a"
+const val GET_DATE_PATTERN2 = "ddMMyyyy_HHmm"
 

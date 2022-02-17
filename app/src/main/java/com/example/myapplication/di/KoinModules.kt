@@ -8,22 +8,59 @@ import com.example.myapplication.repository.roomdb.AppLocalDatabase
 import com.example.myapplication.viewmodel.EditFragmentViewModel
 import com.example.myapplication.viewmodel.HistoryFragmentViewModel
 import com.example.myapplication.viewmodel.MainFragmentViewModel
-import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
-import org.koin.dsl.module
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 
-val appModule = module {
+@Module
+@InstallIn(ActivityComponent::class)
+class HiltModule {
 
     // single instance of HelloRepository
-    single { DataRepoImpl(NetworkModule(androidContext())) }
-    viewModel { (safestateHandle:SavedStateHandle)->MainFragmentViewModel(get(),safestateHandle) }
-    viewModel { HistoryFragmentViewModel(get()) }
-    viewModel { EditFragmentViewModel(get()) }
+//    @Provides
+//    @Singleton
+//    fun getDataRepoImpl(@ApplicationContext appContext: Context): DataRepoImpl {
+//        return DataRepoImpl(NetworkModule(appContext))
+//    }
+
+//    single
+//    { DataRepoImpl(NetworkModule(androidContext())) }
+//    viewModel
+//    { (safestateHandle:SavedStateHandle)->MainFragmentViewModel(get(), safestateHandle) }
+//    viewModel
+//    { HistoryFragmentViewModel(get()) }
+//    viewModel
+//    { EditFragmentViewModel(get()) }
 //    // Simple Presenter Factory
 //    factory { MySimplePresenter(get()) }
 }
 
-class NetworkModule(var context: Context) {
+//val appModule = module {
+//
+//    // single instance of HelloRepository
+//    single { DataRepoImpl(NetworkModule(androidContext())) }
+//    viewModel { (safestateHandle:SavedStateHandle)->MainFragmentViewModel(get(),safestateHandle) }
+//    viewModel { HistoryFragmentViewModel(get()) }
+//    viewModel { EditFragmentViewModel(get()) }
+////    // Simple Presenter Factory
+////    factory { MySimplePresenter(get()) }
+//}
+//@InstallIn(ViewModelComponent::class) // Scope our dependencies
+//@Module
+//abstract class ProfileModule {
+//
+//    // To be read as — When someone asks for DataRepository, create a DataRepoImpl and return it.
+//    @Binds
+//    abstract fun getProfileSource(repo: DataRepoImpl): DataRepoImpl
+//}
+
+class NetworkModule @Inject constructor(@ApplicationContext var context: Context) {
 
     fun sourceOfTruthNetworkDB(): AgifyService {
         return AgifyService.create()

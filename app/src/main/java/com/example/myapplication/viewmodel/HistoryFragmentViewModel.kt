@@ -5,10 +5,13 @@ import com.example.myapplication.helper.ResponseModel
 import com.example.myapplication.pojos.SendResponseModel
 import com.example.myapplication.pojos.UserData
 import com.example.myapplication.repository.DataRepoImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
+import javax.inject.Inject
 
-class HistoryFragmentViewModel(private var dataRepoImpl: DataRepoImpl) : ViewModel() {
+@HiltViewModel
+class HistoryFragmentViewModel @Inject constructor(private var dataRepoImpl: DataRepoImpl) : ViewModel() {
     private val TAG = "MainFragmentViewModel"
 
     val uiUpdates =
@@ -21,7 +24,6 @@ class HistoryFragmentViewModel(private var dataRepoImpl: DataRepoImpl) : ViewMod
         dataRepoImpl.getallDataFromLocalDb().collect {
             uiUpdates.emit(ResponseModel.Success(it))
         }
-
     }
     fun delUser(userData: UserData){
         dataRepoImpl.delDataFromRoom(userData)

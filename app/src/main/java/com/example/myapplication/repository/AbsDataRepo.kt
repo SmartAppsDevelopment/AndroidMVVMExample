@@ -33,6 +33,7 @@ abstract class AbsDataRepo(var networkModule: NetworkModule) {
         TODO()
     }
 
+
     fun doesthisRequestForMultipleUser(query: SendResponseModel): Boolean {
         return query.userName.contains(",")
     }

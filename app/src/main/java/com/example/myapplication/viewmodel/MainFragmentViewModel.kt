@@ -7,11 +7,14 @@ import com.example.myapplication.helper.ResponseModel
 import com.example.myapplication.pojos.SendResponseModel
 import com.example.myapplication.pojos.UserData
 import com.example.myapplication.repository.DataRepoImpl
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MainFragmentViewModel(
+@HiltViewModel
+class MainFragmentViewModel @Inject constructor(
     private var dataRepoImpl: DataRepoImpl,
     private var savedStateHandle: SavedStateHandle
 ) : ViewModel() {
