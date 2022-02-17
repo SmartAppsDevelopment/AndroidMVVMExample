@@ -13,17 +13,19 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 
 
-class DataRepo(var networkModule: NetworkModule) {
+class DataRepoImpl(networkModel: NetworkModule):AbsDataRepo(networkModel) {
     private val TAG = "DataRepo"
-    private var dataflowModel =
-        MutableStateFlow<ResponseModel<List<UserData>>>(ResponseModel.Idle("Source Idel"))
 
     fun identifySourceOfDATA(query: String): DATA_SOURCE_TYPES {
         /////////////////////////check for local db if exist then from local
         return DATA_SOURCE_TYPES.FROM_NETWORK
     }
 
-    suspend fun getSearchResultStream(
+    /**
+     *
+     */
+
+    override suspend fun getSearchResultStream(
         query: SendResponseModel
     ): Flow<List<UserData?>> {
         return when (identifySourceOfDATA(query.userName)) {
@@ -32,20 +34,12 @@ class DataRepo(var networkModule: NetworkModule) {
         }
     }
 
-    private fun getDataFromLocalDb(query: SendResponseModel): Flow<List<UserData?>> {
-        TODO()
-    }
-
-    fun getallDataFromLocalDb(): Flow<List<UserData>> {
-        return networkModule.sourceOfTruthLocalDB().userNameDao().getUserNameList()
-    }
-
-    suspend fun getDataFromNetWork(
+    override suspend fun getDataFromNetWork(
         query: SendResponseModel
     ): Flow<List<UserData?>> {
 
-        return flow<List<UserData>> {
-            if (query.userName.contains(",")) {
+        return flow {
+            if (doesthisRequestForMultipleUser(query)) {
                 ///////////////////////////////for multiple user
                 val listToSendBack = arrayListOf<UserData>()
                 val listOfUserNameNotFound = arrayListOf<String>()
@@ -91,35 +85,5 @@ class DataRepo(var networkModule: NetworkModule) {
             }
         }.flowOn(Dispatchers.IO)
     }
-
-    private fun doesUserExistInLocalDB(userData: SendResponseModel): List<UserData> {
-        val listOfData = networkModule.sourceOfTruthLocalDB()
-            .userNameDao()
-            .getUserByID(userData.userName, userData.country)
-        return listOfData
-    }
-
-    private fun doesUserExistInLocalDBBol(userData: SendResponseModel): Boolean {
-        val listOfData = networkModule.sourceOfTruthLocalDB()
-            .userNameDao()
-            .getUserByID(userData.userName, userData.country)
-        return (listOfData.size > 0)
-    }
-
-    private fun sendDataToRoom(body: List<UserData>) {
-        body.forEach {
-            // if(it.age.isNullOrEmpty())
-            val longid = networkModule.sourceOfTruthLocalDB().userNameDao().insertUserName(it)
-            Log.e(TAG, "sendDataToRoom: " + longid)
-        }
-    }
-
-    fun delDataFromRoom(body: UserData) {
-
-        val longid = networkModule.sourceOfTruthLocalDB().userNameDao().deleteUserName(body)
-        Log.e(TAG, "sendDataToRoom: " + longid)
-
-    }
-
 
 }

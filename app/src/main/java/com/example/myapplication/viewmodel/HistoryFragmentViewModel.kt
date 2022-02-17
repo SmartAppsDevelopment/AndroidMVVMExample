@@ -1,18 +1,14 @@
 package com.example.myapplication.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.myapplication.helper.ResponseModel
 import com.example.myapplication.pojos.SendResponseModel
 import com.example.myapplication.pojos.UserData
-import com.example.myapplication.repository.DataRepo
-import kotlinx.coroutines.flow.Flow
+import com.example.myapplication.repository.DataRepoImpl
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
-class HistoryFragmentViewModel(private var dataRepo: DataRepo) : ViewModel() {
+class HistoryFragmentViewModel(private var dataRepoImpl: DataRepoImpl) : ViewModel() {
     private val TAG = "MainFragmentViewModel"
 
     val uiUpdates =
@@ -22,13 +18,13 @@ class HistoryFragmentViewModel(private var dataRepo: DataRepo) : ViewModel() {
 
     suspend fun getDataFromLocalDb() {
         uiUpdates.emit(ResponseModel.Loading())
-        dataRepo.getallDataFromLocalDb().collect {
+        dataRepoImpl.getallDataFromLocalDb().collect {
             uiUpdates.emit(ResponseModel.Success(it))
         }
 
     }
     fun delUser(userData: UserData){
-        dataRepo.delDataFromRoom(userData)
+        dataRepoImpl.delDataFromRoom(userData)
     }
 
     fun markIdleStsate() {

@@ -39,6 +39,7 @@ abstract class AppLocalDatabase : RoomDatabase() {
                 instance ?: buildDatabase(context).also { instance = it }
             }
         }
+
         private fun buildDatabase(context: Context): AppLocalDatabase {
             return Room.databaseBuilder(context, AppLocalDatabase::class.java, DATABASE_NAME)
                 .allowMainThreadQueries()

@@ -5,16 +5,15 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.TextView.OnEditorActionListener
-import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.*
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentMainBinding
@@ -29,41 +28,25 @@ import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
-class MainFragment : Fragment() {
+class MainFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
     private val TAG = "MainFragment"
-    lateinit var binding: FragmentMainBinding
     val viewmodel by sharedViewModel<MainFragmentViewModel>()
-    val isBindingInit = this::binding.isInitialized
+
     var progress: ProgressDialog? = null
     var currentIndex = -1
     var currentCountry = "US"
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_main, container, false)
-        progress = ProgressDialog(context)
-        progress?.setMessage("Loading...")
-        binding = DataBindingUtil.inflate<FragmentMainBinding>(
-            inflater,
-            R.layout.fragment_main,
-            null,
-            false
-        )
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //// binding.tveText.setText(viewmodel.currUserName)
+        progress = ProgressDialog(context)
+        progress?.setMessage("Loading...")
         val items = resources.getStringArray(R.array.countrynames)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, items)
         if (true) {
             binding.autoCompletetxt.setAdapter(adapter)
             binding.autoCompletetxt.setOnItemClickListener { adapterView, view, i, l ->
                 Log.e(TAG, "onViewCreated: ")
-
                 currentIndex = i
             }
             binding.btnsearch.setOnClickListener {
@@ -128,7 +111,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    fun observeData() {
+    private fun observeData() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 viewmodel.uiUpdates.collectLatest {
@@ -166,7 +149,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    fun showDialog() {
+    private fun showDialog() {
         viewmodel.viewModelScope.launch {
             withContext(Dispatchers.Main) {
                 progress?.show()
@@ -174,7 +157,7 @@ class MainFragment : Fragment() {
         }
     }
 
-    fun dismissDialog() {
+    private fun dismissDialog() {
         viewmodel.viewModelScope.launch {
             withContext(Dispatchers.Main) {
                 progress?.hide()

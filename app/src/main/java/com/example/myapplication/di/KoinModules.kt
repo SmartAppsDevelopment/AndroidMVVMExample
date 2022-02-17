@@ -3,7 +3,7 @@ package com.example.myapplication.di
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import com.example.myapplication.api.AgifyService
-import com.example.myapplication.repository.DataRepo
+import com.example.myapplication.repository.DataRepoImpl
 import com.example.myapplication.repository.roomdb.AppLocalDatabase
 import com.example.myapplication.viewmodel.EditFragmentViewModel
 import com.example.myapplication.viewmodel.HistoryFragmentViewModel
@@ -15,7 +15,7 @@ import org.koin.dsl.module
 val appModule = module {
 
     // single instance of HelloRepository
-    single { DataRepo(NetworkModule(androidContext())) }
+    single { DataRepoImpl(NetworkModule(androidContext())) }
     viewModel { (safestateHandle:SavedStateHandle)->MainFragmentViewModel(get(),safestateHandle) }
     viewModel { HistoryFragmentViewModel(get()) }
     viewModel { EditFragmentViewModel(get()) }

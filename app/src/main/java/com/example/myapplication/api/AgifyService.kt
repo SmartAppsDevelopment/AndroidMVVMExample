@@ -34,13 +34,6 @@ import retrofit2.http.QueryMap
  */
 interface AgifyService {
 
-    //    @GET("search/photos")
-//    suspend fun searchPhotos(
-//        @Query("query") query: String,
-//        @Query("page") page: Int,
-//        @Query("per_page") perPage: Int,
-//    ): UnsplashSearchResponse
-///@Query("page") String page
     @GET("?")
    suspend fun getSingleNameAge(@Query("country_id") countryid: String,@Query("name") userName: String): Response<UserData>
 

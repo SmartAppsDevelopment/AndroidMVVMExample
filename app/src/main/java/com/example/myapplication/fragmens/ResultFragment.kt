@@ -17,25 +17,11 @@ import com.google.gson.reflect.TypeToken
 import java.util.ArrayList
 
 
-class ResultFragment : Fragment() {
+class ResultFragment : BaseFragment<FragmentResultBinding>(R.layout.fragment_result) {
     private val TAG = "ResultFragment"
     val args: ResultFragmentArgs by navArgs()
-    lateinit var binding: FragmentResultBinding
     var resultFragmnetAdapter: ResultFragmnetAdapter = ResultFragmnetAdapter()
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_main, container, false)
-        binding = DataBindingUtil.inflate<FragmentResultBinding>(
-            inflater,
-            R.layout.fragment_result,
-            null,
-            false
-        )
-        return binding.root
-    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

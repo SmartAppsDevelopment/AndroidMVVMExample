@@ -25,12 +25,11 @@ import java.io.FileOutputStream
 import java.io.InputStream
 
 
-class EditFragment : Fragment() {
+class EditFragment : BaseFragment<FragmentEditBinding>(R.layout.fragment_edit) {
     private val TAG = "MainFragment"
     val incomingdata: EditFragmentArgs by navArgs()
     var currImageuri: Uri? = null
     val viewmodel by viewModel<EditFragmentViewModel>()
-    lateinit var binding: FragmentEditBinding
     var currentIndex = -1
     val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         // Handle the returned Uri
@@ -41,26 +40,12 @@ class EditFragment : Fragment() {
     }
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_main, container, false)
-        binding = DataBindingUtil.inflate<FragmentEditBinding>(
-            inflater,
-            R.layout.fragment_edit,
-            null,
-            false
-        )
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val user = incomingdata.userData ?: return
         with(binding) {
-            tvCount.setText("HeadCount " + user.count.toString())
+            tvCount.text = "HeadCount " + user.count.toString()
             if (!user.age.isNullOrEmpty()) {
                 tvAge.setText("Age " + user.age.toString())
             } else {
@@ -85,7 +70,7 @@ class EditFragment : Fragment() {
         }
         binding.btndel.setOnClickListener {
             if ((incomingdata.userData != null) and (currImageuri != null)) {
-                val filepath=saveuriReturnPath()
+                val filepath = saveuriReturnPath()
                 viewmodel.saveUriToDb(incomingdata.userData!!, filepath)
                 currImageuri = null
                 requireContext().showToast("Image updated ")
@@ -98,11 +83,11 @@ class EditFragment : Fragment() {
     private fun saveuriReturnPath(): String {
         val res = requireContext().contentResolver
         val instream: InputStream? = res.openInputStream(currImageuri!!)
-        val imgreffile=FileRef.getBaseFileForImage(requireContext())
-        val outputStream=FileOutputStream(imgreffile)
+        val imgreffile = FileRef.getBaseFileForImage(requireContext())
+        val outputStream = FileOutputStream(imgreffile)
         instream!!.copyTo(outputStream)
         instream.close()
-return imgreffile.absolutePath
+        return imgreffile.absolutePath
     }
 
     private fun pickImageFromGal() {

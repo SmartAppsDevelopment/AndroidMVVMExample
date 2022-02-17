@@ -86,7 +86,7 @@ dependencies {
     implementation 'org.apache.commons:commons-io:1.3.2'
 ///////////////////////////////Picasso For loading Images
     implementation 'com.squareup.picasso:picasso:2.71828'
-///////////////////////////////Saving File as pdf
+   //Saving File as pdf
     implementation 'com.itextpdf:itextpdf:5.5.13'
 
 }

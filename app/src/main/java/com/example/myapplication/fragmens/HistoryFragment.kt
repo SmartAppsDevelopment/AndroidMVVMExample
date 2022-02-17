@@ -48,35 +48,20 @@ import java.util.*
 import android.content.ContentValues as ContentValues1
 
 
-class HistoryFragment : Fragment(), (UserData) -> Unit {
+class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_history), (UserData) -> Unit {
     private val TAG = "ResultFragment"
     var progress: ProgressDialog? = null
 
     //    val args: ResultFragmentArgs by navArgs()
-    lateinit var binding: FragmentHistoryBinding
     val viewmodel by viewModel<HistoryFragmentViewModel>()
     var resultFragmnetAdapter = HistoryFragmnetAdapter().apply {
 
         delUserCallback = this@HistoryFragment
     }
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_main, container, false)
-        binding = DataBindingUtil.inflate<FragmentHistoryBinding>(
-            inflater,
-            R.layout.fragment_history,
-            null,
-            false
-        )
-        setHasOptionsMenu(true)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         binding.rv.adapter = resultFragmnetAdapter
         progress = ProgressDialog(context)
         progress?.setMessage("Loading Data")
