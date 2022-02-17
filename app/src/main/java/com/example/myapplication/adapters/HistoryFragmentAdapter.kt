@@ -82,7 +82,12 @@ var delUserCallback:((userData:UserData)->Unit)?=null
                     if (fileRef.exists()) {
                         Picasso.get().load(fileRef).transform(PicassoCircleTransformation())
                             .into(binding.ivAvatar)
+                    }else{
+                        binding.ivAvatar.setImageResource(R.drawable.ic_baseline_image_24)
                     }
+                }else{
+                    binding.ivAvatar.setImageResource(R.drawable.ic_baseline_image_24)
+
                 }
                 executePendingBindings()
             }

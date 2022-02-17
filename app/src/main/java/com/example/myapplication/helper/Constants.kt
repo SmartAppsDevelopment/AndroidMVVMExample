@@ -12,7 +12,7 @@ object FileRef{
          return ff
     }
      fun getBaseFileForImage(context: Context): File {
-        return File( getBaseFile(context),"IMG_"+String.format("%60d",(1..10000).random())+".jpg")
+        return File( getBaseFile(context),"IMG_"+String.format("%5d",(1..10000).random())+".jpg")
     }
 }
 enum class DataSourceType{

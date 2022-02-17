@@ -1,15 +1,21 @@
 package com.example.myapplication.fragmens
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
@@ -27,6 +33,7 @@ import com.itextpdf.text.*
 import com.itextpdf.text.pdf.CMYKColor
 import com.itextpdf.text.pdf.PdfPCell
 import com.itextpdf.text.pdf.PdfPTable
+import com.itextpdf.text.pdf.PdfWriter
 import com.itextpdf.text.pdf.draw.LineSeparator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +42,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -127,6 +135,19 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
             val dateFormat = SimpleDateFormat(GET_DATE_PATTERN2)
             //Open the document
             document.open()
+
+            val outputStream =
+                saveFileUsingMediaStore(
+                    requireContext(),
+                    "AndroPDF_" + (0..1000).random()+"_"+ dateFormat.format(Calendar.getInstance().getTime())
+                        .toString() + ".pdf"
+                )
+
+            ///  )
+            val writer: PdfWriter = PdfWriter.getInstance(document, outputStream)
+
+
+
             document.pageSize = PageSize.A4
             document.addCreationDate()
             document.addAuthor(getString(R.string.author))
@@ -262,6 +283,23 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
 
         }
     }
-
+    private fun saveFileUsingMediaStore(context: Context, fileName: String): OutputStream? {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+            put(MediaStore.MediaColumns.MIME_TYPE, MimeTypeMap.getSingleton().getMimeTypeFromExtension(".pdf"))
+            put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+        }
+        val resolver = context.contentResolver
+        val uri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            resolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues)
+        } else {
+            resolver.insert(MediaStore.Files.getContentUri("external"), contentValues)
+        }
+        if (uri != null) {
+//            URL(url).openStream().use { input ->
+            return resolver.openOutputStream(uri)
+        }
+        return  null
+    }
 
 }
