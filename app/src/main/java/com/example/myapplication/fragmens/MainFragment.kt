@@ -23,10 +23,8 @@ import com.example.myapplication.helper.showToast
 import com.example.myapplication.pojos.SendResponseModel
 import com.example.myapplication.viewmodel.MainFragmentViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MainFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
@@ -40,7 +38,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
         super.onViewCreated(view, savedInstanceState)
         val items = resources.getStringArray(R.array.countrynames)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, items)
-
             binding.autoCompletetxt.setAdapter(adapter)
             binding.autoCompletetxt.setOnItemClickListener { _, _, i, _ ->
                 showLog( "onViewCreated: ")

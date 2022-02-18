@@ -7,13 +7,14 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 
-class NetworkModule @Inject constructor(@ApplicationContext var context: Context) {
-
+class DataSources @Inject constructor(@ApplicationContext var context: Context,
+                                      private val service: AgifyService,
+                                      private val localDb: AppLocalDatabase) {
     fun sourceOfTruthNetworkDB(): AgifyService {
-        return AgifyService.create()
+        return service
     }
 
     fun sourceOfTruthLocalDB(): AppLocalDatabase {
-        return AppLocalDatabase.getInstance(context)
+        return localDb
     }
 }

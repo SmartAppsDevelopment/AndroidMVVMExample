@@ -18,6 +18,7 @@ package com.example.myapplication.api
 
 
 
+import com.example.myapplication.helper.BASE_URL
 import com.example.myapplication.pojos.UserData
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -39,22 +40,4 @@ interface AgifyService {
     @GET("?")
    suspend fun getMultipleNamesAge(@Query("country_id") countryId: String, @Query("name[]") userNames: List<String>): Response<List<UserData>>
 
-    companion object {
-        private const val BASE_URL = "https://api.agify.io/"
-
-        fun create(): AgifyService {
-            val logger = HttpLoggingInterceptor().apply { level = Level.BASIC }
-
-            val client = OkHttpClient.Builder()
-                .addInterceptor(logger)
-                .build()
-
-            return Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(AgifyService::class.java)
-        }
-    }
 }

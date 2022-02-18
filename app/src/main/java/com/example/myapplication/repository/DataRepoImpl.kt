@@ -1,6 +1,6 @@
 package com.example.myapplication.repository
 
-import com.example.myapplication.di.NetworkModule
+import com.example.myapplication.di.DataSources
 import com.example.myapplication.helper.DataSourceType
 import com.example.myapplication.helper.showLog
 import com.example.myapplication.pojos.SendResponseModel
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 
-class DataRepoImpl @Inject constructor(private var networkModel: NetworkModule) : DataRepo {
+class DataRepoImpl @Inject constructor(private var networkModel: DataSources) : DataRepo {
 
     private fun identifySourceOfDATA(): DataSourceType {
         /////////////////////////check for local db if exist then from local

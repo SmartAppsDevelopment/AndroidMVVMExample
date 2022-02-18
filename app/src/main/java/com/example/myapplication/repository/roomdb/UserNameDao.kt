@@ -32,7 +32,7 @@ interface UserNameDao {
      fun deleteUserName(datamodel: UserData)
 
     @Update
-    fun updateUser(datamodel: UserData)
+    fun updateUser(dataModel: UserData)
 
     @Query("SELECT * FROM userdata WHERE  name like :username AND countryId=:coutnryID")
     fun getUserByID(username: String,coutnryID:String): List<UserData>
