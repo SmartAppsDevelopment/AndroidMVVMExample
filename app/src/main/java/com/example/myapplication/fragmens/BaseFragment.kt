@@ -27,9 +27,9 @@ open class BaseFragment<T : ViewDataBinding>(private var layoutId: Int) : Fragme
         context ?: return
     }
 
-    fun showProgressDialog() {
+    fun showProgressDialog(msg:String="Please Wait") {
         progressDialog = progressDialog ?: KProgressHUD.create(requireActivity())
-        progressDialog?.setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)?.setLabel("Please wait")
+        progressDialog?.setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)?.setLabel(msg)
             ?.setCancellable(true)?.setAnimationSpeed(2)?.setDimAmount(0.5f)?.show()
 
     }

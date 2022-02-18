@@ -3,6 +3,7 @@ package com.example.myapplication.pojos
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
@@ -16,6 +17,6 @@ data class UserData(
 ):Parcelable{
     @IgnoredOnParcel
     var userImageRef:String=""
-    @IgnoredOnParcel
+    @SerializedName("country_id")
     var countryId:String=""
 }
