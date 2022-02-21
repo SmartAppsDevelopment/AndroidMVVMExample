@@ -28,6 +28,9 @@ interface UserNameDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
      fun insertUserName(dataModel: UserData): Long
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertUserNames(dataModel: List<UserData>)
+
     @Delete
      fun deleteUserName(datamodel: UserData)
 

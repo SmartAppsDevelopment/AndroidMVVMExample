@@ -15,7 +15,7 @@ import javax.inject.Inject
 class DataRepoImpl @Inject constructor(private var networkModel: DataSources) : DataRepo {
 
     private fun identifySourceOfDATA(): DataSourceType {
-        /////////////////////////check for local db if exist then from local
+        /////////////////////////check for local DataBase if exist then from local
         return DataSourceType.FROM_NETWORK
     }
 
@@ -118,10 +118,8 @@ class DataRepoImpl @Inject constructor(private var networkModel: DataSources) : 
     }
 
     private fun sendDataToRoom(body: List<UserData>) {
-        body.forEach {
-            val longId = networkModel.sourceOfTruthLocalDB().userNameDao().insertUserName(it)
+            val longId = networkModel.sourceOfTruthLocalDB().userNameDao().insertUserNames(body)
             showLog("sendDataToRoom: $longId")
-        }
     }
 
     private fun doesUserExistInLocalDB(userData: SendResponseModel): List<UserData> {
