@@ -37,7 +37,13 @@ Searched History|Edit Img Change|Whole Img Gif
 *   A complete Jetpack sample covering all libraries. Check out [Android Sunflower](https://github.com/googlesamples/android-sunflower) or the advanced [Github Browser Sample](https://github.com/googlesamples/android-architecture-components/tree/master/GithubBrowserSample) instead.
 *   A real production app with network access, user authentication, etc. Check out the [Google I/O app](https://github.com/google/iosched), [Santa Tracker](https://github.com/google/santa-tracker-android) or [Tivi](https://github.com/chrisbanes/tivi) for that.
 *   Model-View-ViewModel (ie MVVM) is a template of a client application architecture  [MVVM](https://github.com/ahmedeltaher/MVVM-Kotlin-Android-Architecture)
-*   [MarvelHeroes](https://github.com/skydoves/MarvelHeroes) is a demo application based on modern Android application tech-stacks and MVVM architecture.Fetching data from the network and integrating persisted data in the database via repository pattern.
+*   [MarvelHeroes](https://github.com/skydoves/MarvelHeroes) is a demo application based on modern Android application tech-stacks and MVVM architecture.Fetching data from the network and integrating persisted data in the database via repository pattern.<br/>
+ # UseCase
+You can reference the good use cases of this library in the below repositories.
+- [Pokedex](https://github.com/skydoves/pokedex) - 🗡️ Android Pokedex using Hilt, Motion, Coroutines, Flow, Jetpack (Room, ViewModel, LiveData) based on MVVM architecture.
+- [DisneyMotions](https://github.com/skydoves/DisneyMotions) - 🦁 A Disney app using transformation motions based on MVVM (ViewModel, Coroutines, LiveData, Room, Repository, Koin) architecture.
+- [MarvelHeroes](https://github.com/skydoves/marvelheroes) - ❤️ A sample Marvel heroes application based on MVVM (ViewModel, Coroutines, LiveData, Room, Repository, Koin)  architecture.
+- [TheMovies2](https://github.com/skydoves/TheMovies2) - 🎬 A demo project using The Movie DB based on Kotlin MVVM architecture and material design & animations.
 
 
 
