@@ -16,11 +16,8 @@
 
 package com.example.myapplication.repository.roomdb
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.myapplication.helper.DATABASE_NAME
 import com.example.myapplication.pojos.UserData
 
 /**
@@ -29,25 +26,4 @@ import com.example.myapplication.pojos.UserData
 @Database(entities = [UserData::class], version = 4, exportSchema = false)
 abstract class AppLocalDatabase : RoomDatabase() {
     abstract fun userNameDao(): UserNameDao
-    companion object {
-        // For Singleton instantiation
-        @Volatile private var instance: AppLocalDatabase? = null
-
-        fun getInstance(context: Context): AppLocalDatabase {
-            return instance ?: synchronized(this) {
-                instance ?: buildDatabase(context).also { instance = it }
-            }
-        }
-
-        private fun buildDatabase(context: Context): AppLocalDatabase {
-            return Room.databaseBuilder(context, AppLocalDatabase::class.java, DATABASE_NAME)
-                .allowMainThreadQueries()
-                .fallbackToDestructiveMigration()
-                .addCallback(
-                    object : RoomDatabase.Callback() {
-                    }
-                )
-                .build()
-        }
-    }
 }

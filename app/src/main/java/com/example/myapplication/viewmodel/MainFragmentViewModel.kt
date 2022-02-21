@@ -10,6 +10,7 @@ import com.example.myapplication.repository.DataRepo
 import com.example.myapplication.repository.DataRepoImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ class MainFragmentViewModel @Inject constructor(
         uiUpdates.emit(ResponseModel.Loading())
         dataRepoImpl.getSearchResultStream(queryString).collect {
             viewModelScope.launch {
+                ensureActive()
                 uiUpdates.emit(ResponseModel.Success(it))
             }
         }

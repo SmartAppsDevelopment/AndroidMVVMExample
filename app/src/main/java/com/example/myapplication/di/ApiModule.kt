@@ -16,16 +16,31 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object ApiModule {
 
+    @HttpLoggerInterceptorBasic
     @Singleton
     @Provides
     fun providesHttpLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BASIC }
 
+
+    @HttpLoggerInterceptorBody
     @Singleton
     @Provides
-    fun providesOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor) =
+    fun providesHttpLoggingInterceptor1(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+
+
+    @HttpLoggerInterceptorHeader
+    @Singleton
+    @Provides
+    fun providesHttpLoggingInterceptor2(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.HEADERS }
+
+
+    @Singleton
+    @Provides
+    fun providesOkHttpClient(@HttpLoggerInterceptorHeader httpLoggingInterceptor: HttpLoggingInterceptor) =
         OkHttpClient.Builder()
             .addInterceptor(httpLoggingInterceptor)
             .build()
+
 
     @Singleton
     @Provides
@@ -34,6 +49,7 @@ object ApiModule {
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .build()
+
 
     @Singleton
     @Provides
