@@ -33,6 +33,7 @@ Searched History|Edit Img Change|Whole Img Gif
 <img src="images/historyss.jpg" width="250px" />|<img src="images/editss.jpg" width="250px" />|<img src="images/gif.gif" width="250px" />
 
 ## Where To go From here
+*    [Android Components Architecture] (https://github.com/vmadalin/android-modular-architecture) in a Modular Word is a sample project that presents modern, 2020 approach to [Android](https://www.android.com/) application development         using [Kotlin](https://kotlinlang.org/) and latest tech-stack.
 *   A UI/Material Design sample. The interface of the app is deliberately kept simple to focus on architecture. Check out [Plaid](https://github.com/android/plaid) instead.
 *   A complete Jetpack sample covering all libraries. Check out [Android Sunflower](https://github.com/googlesamples/android-sunflower) or the advanced [Github Browser Sample](https://github.com/googlesamples/android-architecture-components/tree/master/GithubBrowserSample) instead.
 *   A real production app with network access, user authentication, etc. Check out the [Google I/O app](https://github.com/google/iosched), [Santa Tracker](https://github.com/google/santa-tracker-android) or [Tivi](https://github.com/chrisbanes/tivi) for that.
