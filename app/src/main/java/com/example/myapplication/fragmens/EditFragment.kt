@@ -12,6 +12,7 @@ import com.example.myapplication.databinding.FragmentEditBinding
 import com.example.myapplication.helper.FileRef
 import com.example.myapplication.helper.showToast
 import com.example.myapplication.viewmodel.EditFragmentViewModel
+import com.example.ui.base.BaseFragment
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -54,11 +55,6 @@ class EditFragment : BaseFragment<FragmentEditBinding>(R.layout.fragment_edit) {
             executePendingBindings()
         }
         binding.ivAvatarimg.setOnClickListener {
-//            ImagePicker.with(this)
-//                .crop()	    			//Crop image(Optional), Check Customization for more option
-//                .compress(1024)			//Final image size will be less than 1 MB(Optional)
-//                .maxResultSize(1080, 1080)	//Final image resolution will be less than 1080 x 1080(Optional)
-//                .start()
             pickImageFromGal()
         }
         binding.btndel.setOnClickListener {

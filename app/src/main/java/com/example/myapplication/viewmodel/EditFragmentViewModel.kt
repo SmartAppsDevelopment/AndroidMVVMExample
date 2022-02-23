@@ -15,5 +15,4 @@ class EditFragmentViewModel @Inject constructor(private var dataRepoImpl: DataRe
          dataRepoImpl.updateUser(userData)
     }
 
-
 }

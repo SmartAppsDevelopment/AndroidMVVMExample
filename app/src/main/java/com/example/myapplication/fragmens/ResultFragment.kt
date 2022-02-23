@@ -8,6 +8,7 @@ import com.example.myapplication.adapters.ResultFragmentAdapter
 import com.example.myapplication.databinding.FragmentResultBinding
 import com.example.myapplication.helper.showLog
 import com.example.myapplication.pojos.UserData
+import com.example.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 

@@ -14,6 +14,7 @@ import com.example.myapplication.databinding.FragmentHistoryBinding
 import com.example.myapplication.helper.*
 import com.example.myapplication.pojos.UserData
 import com.example.myapplication.viewmodel.HistoryFragmentViewModel
+import com.example.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
