@@ -45,6 +45,9 @@ You can reference the good use cases of this library in the below repositories.
 - [DisneyMotions](https://github.com/skydoves/DisneyMotions) - 🦁 A Disney app using transformation motions based on MVVM (ViewModel, Coroutines, LiveData, Room, Repository, Koin) architecture.
 - [MarvelHeroes](https://github.com/skydoves/marvelheroes) - ❤️ A sample Marvel heroes application based on MVVM (ViewModel, Coroutines, LiveData, Room, Repository, Koin)  architecture.
 - [TheMovies2](https://github.com/skydoves/TheMovies2) - 🎬 A demo project using The Movie DB based on Kotlin MVVM architecture and material design & animations.
+- [ForUiRef](https://github.com/wasabeef/awesome-android-ui) -A curated list of awesome Android UI/UX libraries.
+
+
 
 
 
