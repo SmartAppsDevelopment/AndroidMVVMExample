@@ -39,7 +39,9 @@ Searched History|Edit Img Change|Whole Img Gif
 *   A real production app with network access, user authentication, etc. Check out the [Google I/O app](https://github.com/google/iosched), [Santa Tracker](https://github.com/google/santa-tracker-android) or [Tivi](https://github.com/chrisbanes/tivi) for that.
 *   Model-View-ViewModel (ie MVVM) is a template of a client application architecture  [MVVM](https://github.com/ahmedeltaher/MVVM-Kotlin-Android-Architecture)
 *   [MarvelHeroes](https://github.com/skydoves/MarvelHeroes) is a demo application based on modern Android application tech-stacks and MVVM architecture.Fetching data from the network and integrating persisted data in the database via repository pattern.<br/>
-*   - [Clean Archetecture ](https://github.com/android10/Android-CleanArchitecture)
+*   - [Clean Archetecture ](https://github.com/android10/Android-CleanArchitecture)This is a sample app that is part of a blog post I have written about how to architect android application using the Uncle Bob's clean architecture approach.
+
+
  # UseCase
 You can reference the good use cases of this library in the below repositories.
 - [Pokedex](https://github.com/skydoves/pokedex) - 🗡️ Android Pokedex using Hilt, Motion, Coroutines, Flow, Jetpack (Room, ViewModel, LiveData) based on MVVM architecture.
