@@ -14,10 +14,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.fragment.NavHostFragment.Companion.findNavController
 import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.databinding.FragmentMainBinding
 import com.example.myapplication.helper.ResponseModel
+import com.example.myapplication.helper.navigateSafe
 import com.example.myapplication.helper.showLog
 import com.example.myapplication.helper.showToast
 import com.example.myapplication.pojos.SendResponseModel
@@ -121,6 +123,7 @@ class MainFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
                         is ResponseModel.Success -> {
                             hideProgress()
                             val dir = MainFragmentDirections.actionMainFragmentToResultFragment()
+
                             showLog(resModel.data!!.size.toString())
                             if (resModel.data.isNotEmpty()) {
                                 val list = resModel.data.map {
@@ -128,7 +131,8 @@ class MainFragment : BaseFragment<FragmentMainBinding>(R.layout.fragment_main) {
                                 }.toTypedArray()
                                 showLog(list.size.toString())
                                 dir.transfereddata = list
-                                findNavController().navigate(dir)
+                             //   findNavController().navigate(dir)
+                                findNavController().navigateSafe(dir)
                                 viewModel.markIdleState()
                             } else {
                                 requireContext().showToast("No Data Found ")

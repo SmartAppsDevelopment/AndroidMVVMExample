@@ -21,12 +21,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myapplication.R
 import com.example.myapplication.databinding.HistoryfragitemBinding
-import com.example.myapplication.fragmens.HistoryFragmentDirections
 import com.example.myapplication.helper.PicassoCircleTransformation
 import com.example.myapplication.pojos.UserData
 import com.squareup.picasso.Picasso
@@ -37,7 +35,8 @@ class HistoryFragmentAdapter :
     ListAdapter<UserData, HistoryFragmentAdapter.ViewHolder>(
         ResultItemDiffCallback()
     ) {
-var delUserCallback:((userData:UserData)->Unit)?=null
+    var delUserCallback: ((userData: UserData) -> Unit)? = null
+    var moveUser: ((userData: UserData) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             DataBindingUtil.inflate(
@@ -51,42 +50,43 @@ var delUserCallback:((userData:UserData)->Unit)?=null
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
+        holder.binding.btnedit.setOnClickListener {
+            moveUser?.invoke(getItem(holder.adapterPosition))
+        }
         holder.binding.btndel.setOnClickListener {
-            Log.e("TAG", "onBindViewHolder: "+currentList.size+"    $position == ${holder.adapterPosition}" )
-
+            Log.e(
+                "TAG",
+                "onBindViewHolder: " + currentList.size + "    $position == ${holder.adapterPosition}"
+            )
             delUserCallback?.invoke(getItem(holder.adapterPosition))
         }
     }
 
     class ViewHolder(
-         val binding: HistoryfragitemBinding
+        val binding: HistoryfragitemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         @SuppressLint("SetTextI18n")
         fun bind(user: UserData) {
-            binding.btnedit.setOnClickListener {
-                val dir = HistoryFragmentDirections.actionHistoryFragmentToEditFragment()
-                dir.userData = user
-                it.findNavController().navigate(dir)
-            }
+
             with(binding) {
-                tvCount.text=("HeadCount " + user.count.toString())
-                tvCountry.text=("Country " + user.countryId)
+                tvCount.text = ("HeadCount " + user.count.toString())
+                tvCountry.text = ("Country " + user.countryId)
                 if (user.age.isNotEmpty()) {
-                    tvAge.text=("Age " + user.age)
+                    tvAge.text = ("Age " + user.age)
                 } else {
-                    tvAge.text=("Age 0")
+                    tvAge.text = ("Age 0")
                 }
-                tvName.text=(tvName.context.resources.getString(R.string.name) +" ${user.name}" )
+                tvName.text = (tvName.context.resources.getString(R.string.name) + " ${user.name}")
 
                 if (user.userImageRef.isNotEmpty()) {
                     val fileRef = File(user.userImageRef)
                     if (fileRef.exists()) {
                         Picasso.get().load(fileRef).transform(PicassoCircleTransformation())
                             .into(binding.ivAvatar)
-                    }else{
+                    } else {
                         binding.ivAvatar.setImageResource(R.drawable.ic_baseline_image_24)
                     }
-                }else{
+                } else {
                     binding.ivAvatar.setImageResource(R.drawable.ic_baseline_image_24)
 
                 }

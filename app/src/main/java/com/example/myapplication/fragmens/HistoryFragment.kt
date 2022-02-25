@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.*
+import androidx.navigation.fragment.findNavController
 import com.example.myapplication.R
 import com.example.myapplication.adapters.HistoryFragmentAdapter
 import com.example.myapplication.databinding.FragmentHistoryBinding
@@ -28,6 +29,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
     private val viewModel by viewModels<HistoryFragmentViewModel>()
     private var adapter = HistoryFragmentAdapter().apply {
         delUserCallback = this@HistoryFragment
+        moveUser = this@HistoryFragment::invoke1
     }
 
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
@@ -100,7 +102,18 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Same fun for deleting user from db
+     */
     override fun invoke(userData: UserData) {
         viewModel.delUser(userData)
+    }
+    /**
+     * Same fun for deleting user from db
+     */
+    private fun invoke1(userData: UserData) {
+        val directions=HistoryFragmentDirections.actionHistoryFragmentToEditFragment()
+        directions.userData=userData
+        findNavController().navigateSafe(directions)
     }
 }
