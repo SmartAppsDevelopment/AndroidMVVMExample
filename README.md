@@ -50,6 +50,7 @@ You can reference the good use cases of this library in the below repositories.
 - [AndroidUtilsSample](https://github.com/Blankj/AndroidUtilCode) Android Utils app contain simple code for starting a app 
 - # Backend Apis List 
 - [List Of Open Apis](https://github.com/TonnyL/Awesome_APIs)This repo is a collection of AWESOME APIs for developers. Feel free to Star and Fork. Any comments, suggestions? Let us know. we love PRs :), please follow the awesome list.
+- [Android Sample Animation] (https://github.com/android/animation-samples/tree/main/Motion) Simple animation sample project.
 
 
 
