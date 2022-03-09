@@ -48,9 +48,9 @@ You can reference the good use cases of this library in the below repositories.
 - [TheMovies2](https://github.com/skydoves/TheMovies2) - 🎬 A demo project using The Movie DB based on Kotlin MVVM architecture and material design & animations.
 - [ForUiRef](https://github.com/wasabeef/awesome-android-ui) -A curated list of awesome Android UI/UX libraries.
 - [AndroidUtilsSample](https://github.com/Blankj/AndroidUtilCode) Android Utils app contain simple code for starting a app 
+- [Android Sample Animation](https://github.com/android/animation-samples/tree/main/Motion) Simple animation sample project.
 - # Backend Apis List 
 - [List Of Open Apis](https://github.com/TonnyL/Awesome_APIs)This repo is a collection of AWESOME APIs for developers. Feel free to Star and Fork. Any comments, suggestions? Let us know. we love PRs :), please follow the awesome list.
-- [Android Sample Animation] (https://github.com/android/animation-samples/tree/main/Motion) Simple animation sample project.
 
 
 
