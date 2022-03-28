@@ -16,57 +16,49 @@
 
 package com.example.myapplication.adapters
 
-import android.annotation.SuppressLint
-import com.example.myapplication.pojos.UserData
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.example.myapplication.R
-import com.example.myapplication.databinding.ResultfragitemBinding
+import com.example.myapplication.pojos.UserData
 
 
-class ResultFragmentAdapter:
-    ListAdapter<UserData, ResultFragmentAdapter.ViewHolder>(
-        ResultItemDiffCallback()
-    ) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(
-            DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context),
-                R.layout.resultfragitem,
-                parent,
-                false
-            )
-        )
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
-    }
-
-    class ViewHolder(
-        private val binding: ResultfragitemBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
-        @SuppressLint("SetTextI18n")
-        fun bind(user: UserData) {
-            with(binding) {
-                tvCount.text=("HeadCount " + user.count.toString())
-                if (user.age!=null) {
-                    tvAge.text=("Age " + user.age)
-                } else {
-                    tvAge.text=("Age 0")
-                }
-                tvName.text=("Name " + user.name)
-                executePendingBindings()
-            }
-        }
-    }
-}
-
+//class ResultFragmentAdapter:
+//    ListAdapter<UserData, ResultFragmentAdapter.ViewHolder>(
+//        ResultItemDiffCallback()
+//    ) {
+//
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+//        return ViewHolder(
+//            DataBindingUtil.inflate(
+//                LayoutInflater.from(parent.context),
+//                R.layout.resultfragitem,
+//                parent,
+//                false
+//            )
+//        )
+//    }
+//
+//    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+//        holder.bind(getItem(position))
+//    }
+//
+//    class ViewHolder(
+//        private val binding: ResultfragitemBinding
+//    ) : RecyclerView.ViewHolder(binding.root) {
+//        @SuppressLint("SetTextI18n")
+//        fun bind(user: UserData) {
+//            with(binding) {
+//                tvCount.text=("HeadCount " + user.count.toString())
+//                if (user.age!=null) {
+//                    tvAge.text=("Age " + user.age)
+//                } else {
+//                    tvAge.text=("Age 0")
+//                }
+//                tvName.text=("Name " + user.name)
+//                executePendingBindings()
+//            }
+//        }
+//    }
+//}
+//
 class ResultItemDiffCallback : DiffUtil.ItemCallback<UserData>() {
 
     override fun areItemsTheSame(
