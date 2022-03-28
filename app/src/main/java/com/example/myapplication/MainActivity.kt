@@ -4,14 +4,26 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.compose.material.Scaffold
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupWithNavController
+import com.example.myapplication.component.GoogleBottomNavigation
+import com.example.myapplication.component.MyAppBar
 import com.example.myapplication.databinding.ActivityMainBinding
+import com.google.android.material.composethemeadapter.MdcTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,4 +56,33 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }
+}
+
+@Preview
+@Composable
+fun PreviewActivity() {
+    GmailAppContent(rememberNavController())
+    /// ComposeNavigation()
+}
+
+@Composable
+fun GmailAppContent(navController: NavController) {
+    MdcTheme {
+        // A surface container using the 'background' color from the theme
+        val state = rememberScaffoldState()
+        val stateCoroutines = rememberCoroutineScope()
+//        val openDialog = remember {
+//            mutableStateOf(false)
+//        }
+        Scaffold(
+            scaffoldState = state,
+            topBar = { MyAppBar(state, stateCoroutines) },
+            bottomBar = { GoogleBottomNavigation() },
+            /*drawerContent = {
+                DrawerContentAndroid()
+            }*/) {
+           /// MailsList(navController)
+        }
+    }
+
 }
